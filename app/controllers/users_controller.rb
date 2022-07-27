@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
     def index
-        render plain: "Hi"
+        render :index
     end
 end
