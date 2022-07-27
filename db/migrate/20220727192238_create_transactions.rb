@@ -4,9 +4,9 @@ class CreateTransactions < ActiveRecord::Migration[7.0]
       t.decimal :amount
       t.datetime :date
       t.string :merchant
-      t.string :category
 
       t.references :user
+      t.references :category
       t.timestamps
     end
   end
