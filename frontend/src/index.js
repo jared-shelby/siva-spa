@@ -1,5 +1,3 @@
-console.log("JS connected to HTML successfully")
-
 const URL = "http://localhost:3000"
 const content = document.querySelector("#content");
 const homeButton = document.querySelector("#home");
@@ -16,11 +14,38 @@ homeButton.addEventListener("click", event => {
             content.style.backgroundColor = "#edf2f4";
             content.innerHTML = 
                 `<h2>Home</h2>
-                <p>Hi, ${data.name.split(" ")[0]}</p>`;
-            options.innerHTML = 
-                `<h3>Options</h3>
-                <button>Change Name</button>`;
+                <p id="displayName">Hi, ${data.name}</p>`;
         })
+
+    // allow user to change their name
+    options.innerHTML = 
+        `<h3>Options</h3>
+        <button id="changeNameButton">Change Name</button> <br/>
+        <label for="name">Full Name: </label>
+        <input id="name" type="text" name="name"/>`;
+    
+    let changeNameButton = document.querySelector("#changeNameButton");
+    changeNameButton.addEventListener("click", event => {
+        let newName = document.querySelector("#name").value;
+        
+        let newNameBody = { name: newName };
+        
+        let configurationObject = {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify(newNameBody)
+        }
+
+        fetch(`${URL}/users/1`, configurationObject)
+            .then(response => response.json())
+            .then(data => {
+                document.querySelector("#displayName").innerHTML = `Hi, ${data.name}`;
+                document.querySelector("#name").value = "";
+            });
+    })
 })
 
 // GOALS PAGE
@@ -38,22 +63,20 @@ goalsButton.addEventListener("click", event => {
         // display options below all goals
         options.innerHTML = 
             `<h3>Options</h3>
-            <button id="newGoal">Add Goal</button>
+            <button id="newGoal">Add Goal</button> <br/>
             <label for="goalName">Goal Name: </label>
-            <input id="goalName" type="text" name="goalName"/> 
+            <input id="goalName" type="text" name="goalName"/> <br/>
             <label for="goalAmount">Goal Amount: $</label>
-            <input id="goalAmount" type="text" name="goalAmount"/>
+            <input id="goalAmount" type="text" name="goalAmount"/> <br/>
             <label for="goalImage">Goal Image Link: </label>
             <input id="goalImage" type="text" name="goalImage"/>`;
         
         // button to add new goal 
         let newGoalButton = document.querySelector("#newGoal");
         newGoalButton.addEventListener("click", event => {
-            console.log("Add new goal button clicked.")
             let newGoalName = document.querySelector("#goalName").value;
             let newGoalAmount = document.querySelector("#goalAmount").value;
             let newGoalImage = document.querySelector("#goalImage").value;
-            console.log(newGoalName, newGoalAmount, newGoalImage);
             
             let newGoalBody = {
                 name: newGoalName,
