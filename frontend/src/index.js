@@ -1,13 +1,21 @@
 console.log("JS connected to HTML successfully")
 
+const URL = "http://localhost:3000"
 const content = document.querySelector("#content");
 const homeButton = document.querySelector("#home");
 const goalsButton = document.querySelector("#goals");
 const spendingButton = document.querySelector("#spending");
 
 homeButton.addEventListener("click", event => {
-    content.style.backgroundColor = "red";
-    content.innerHTML = "<h2>Home</h2>"
+    
+    fetch(`${URL}/users/1`)
+        .then(response => response.json())
+        .then(data => {
+            content.style.backgroundColor = "red";
+            content.innerHTML = 
+                `<h2>Home</h2>
+                <p>Hi, ${data.name.split(" ")[0]}</p>`;
+        })
 })
 
 goalsButton.addEventListener("click", event => {
