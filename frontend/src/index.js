@@ -5,6 +5,7 @@ const content = document.querySelector("#content");
 const homeButton = document.querySelector("#home");
 const goalsButton = document.querySelector("#goals");
 const spendingButton = document.querySelector("#spending");
+const options = document.querySelector("#options");
 
 // HOME PAGE
 homeButton.addEventListener("click", event => {
@@ -12,10 +13,13 @@ homeButton.addEventListener("click", event => {
     fetch(`${URL}/users/1`)
         .then(response => response.json())
         .then(data => {
-            content.style.backgroundColor = "#e9c46a";
+            content.style.backgroundColor = "#edf2f4";
             content.innerHTML = 
                 `<h2>Home</h2>
                 <p>Hi, ${data.name.split(" ")[0]}</p>`;
+            options.innerHTML = 
+                `<h3>Options</h3>
+                <button>Change Name</button>`;
         })
 })
 
@@ -25,9 +29,12 @@ goalsButton.addEventListener("click", event => {
     fetch(`${URL}/goals`)
         .then(response => response.json())
         .then(data => {
-            content.style.backgroundColor = "#f4a261";
+            content.style.backgroundColor = "#edf2f4";
             content.innerHTML = `<h2>Goals</h2>`;
             data.forEach(goal => content.appendChild(createGoalCard(goal)));
+            options.innerHTML = 
+                `<h3>Options</h3>
+                <button>Add Goal</button>`;
         })
 })
 
@@ -49,10 +56,16 @@ spendingButton.addEventListener("click", event => {
     fetch(`${URL}/transactions`)
         .then(response => response.json())
         .then(data => {
-            content.style.backgroundColor = "#e76f51";
+            content.style.backgroundColor = "#edf2f4";
             content.innerHTML = `<h2>Spending</h2>`;
             data.forEach(transaction => content.appendChild(createTransactionItem(transaction)));
         })
+    options.innerHTML = 
+        `<h3>Options</h3>
+        <button id="btn">Add Transaction</button>`;
+    // test code below; i think this 
+    let btn = document.querySelector("#btn");
+    btn.addEventListener("click", event => console.log("btn clicked"));
 })
 
 function createTransactionItem(transaction){
