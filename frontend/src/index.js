@@ -26,15 +26,55 @@ homeButton.addEventListener("click", event => {
 // GOALS PAGE
 goalsButton.addEventListener("click", event => {
     console.log("Goal Button Clicked!")
+    // get all goals & display
     fetch(`${URL}/goals`)
         .then(response => response.json())
         .then(data => {
             content.style.backgroundColor = "#edf2f4";
             content.innerHTML = `<h2>Goals</h2>`;
             data.forEach(goal => content.appendChild(createGoalCard(goal)));
-            options.innerHTML = 
-                `<h3>Options</h3>
-                <button>Add Goal</button>`;
+        })
+
+        // display options below all goals
+        options.innerHTML = 
+            `<h3>Options</h3>
+            <button id="newGoal">Add Goal</button>
+            <label for="goalName">Goal Name: </label>
+            <input id="goalName" type="text" name="goalName"/> 
+            <label for="goalAmount">Goal Amount: $</label>
+            <input id="goalAmount" type="text" name="goalAmount"/>
+            <label for="goalImage">Goal Image Link: </label>
+            <input id="goalImage" type="text" name="goalImage"/>`;
+        
+        // button to add new goal 
+        let newGoalButton = document.querySelector("#newGoal");
+        newGoalButton.addEventListener("click", event => {
+            console.log("Add new goal button clicked.")
+            let newGoalName = document.querySelector("#goalName").value;
+            let newGoalAmount = document.querySelector("#goalAmount").value;
+            let newGoalImage = document.querySelector("#goalImage").value;
+            console.log(newGoalName, newGoalAmount, newGoalImage);
+            
+            let newGoalBody = {
+                name: newGoalName,
+                amount: newGoalAmount,
+                target: "now",
+                image: newGoalImage,
+                user_id: 1
+            };
+            
+            let configurationObject = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify(newGoalBody)
+            }
+
+            fetch(`${URL}/goals`, configurationObject)
+                .then(response => response.json())
+                .then(data => content.appendChild(createGoalCard(data)));
         })
 })
 
