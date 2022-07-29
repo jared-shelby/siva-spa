@@ -9,6 +9,11 @@ class GoalsController < ApplicationController
         render json: goal, except: [:created_at, :updated_at, :user_id], include: [:user]
     end
 
+    def destroy
+        goal = Goal.find(params[:id]).destroy
+        render json: goal
+    end
+
     private
 
     def goal_params
