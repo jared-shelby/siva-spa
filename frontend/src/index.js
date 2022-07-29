@@ -10,10 +10,9 @@ homeButton.addEventListener("click", event => {
     fetch(`${URL}/users/1`)
         .then(response => response.json())
         .then(data => {
-            content.style.backgroundColor = "#edf2f4";
             content.innerHTML = 
-                `<h2>Home</h2>
-                <p id="displayName">Hi, ${data.name}</p>`;
+                `<h1 class="title">Home</h1>
+                <p id="displayName" class="subtitle">Hi, ${data.name.split(" ")[0]}</p>`;
         })
 
     // allow user to change their name
@@ -53,7 +52,6 @@ goalsButton.addEventListener("click", event => {
     fetch(`${URL}/goals`)
         .then(response => response.json())
         .then(data => {
-            content.style.backgroundColor = "#edf2f4";
             content.innerHTML = `<h2>Goals</h2>`;
             data.forEach(goal => content.appendChild(createGoalCard(goal)));
         })
@@ -144,7 +142,6 @@ spendingButton.addEventListener("click", event => {
     fetch(`${URL}/transactions`)
         .then(response => response.json())
         .then(data => {
-            content.style.backgroundColor = "#edf2f4";
             content.innerHTML = `<h2>Spending</h2>`;
             data.forEach(transaction => content.appendChild(createTransactionItem(transaction)));
         })
