@@ -106,7 +106,7 @@ goalsButton.addEventListener("click", event => {
                     .then(response => response.json())
                     .then(data => event.target.parentElement.remove());
             } else if (event.target.id === "editGoal") {
-                // find nearest goal (div), get dataset id, and send delete request
+                // find nearest goal (div), get dataset id, and send patch request
                 let updatedGoalBody = {
                 }
                 let configObj = {
