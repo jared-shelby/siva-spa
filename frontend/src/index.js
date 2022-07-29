@@ -7,7 +7,6 @@ const options = document.querySelector("#options");
 
 // HOME PAGE
 homeButton.addEventListener("click", event => {
-    console.log("Home Button Clicked!")
     fetch(`${URL}/users/1`)
         .then(response => response.json())
         .then(data => {
@@ -50,7 +49,6 @@ homeButton.addEventListener("click", event => {
 
 // GOALS PAGE
 goalsButton.addEventListener("click", event => {
-    console.log("Goal Button Clicked!")
     // get all goals & display
     fetch(`${URL}/goals`)
         .then(response => response.json())
@@ -115,7 +113,6 @@ function createGoalCard(goal){
 
 // SPENDING PAGE
 spendingButton.addEventListener("click", event => {
-    console.log("Spending Button Clicked!")
     fetch(`${URL}/transactions`)
         .then(response => response.json())
         .then(data => {
@@ -123,12 +120,11 @@ spendingButton.addEventListener("click", event => {
             content.innerHTML = `<h2>Spending</h2>`;
             data.forEach(transaction => content.appendChild(createTransactionItem(transaction)));
         })
+
     options.innerHTML = 
         `<h3>Options</h3>
-        <button id="btn">Add Transaction</button>`;
-    // test code below; i think this 
-    let btn = document.querySelector("#btn");
-    btn.addEventListener("click", event => console.log("btn clicked"));
+        <button id="addTransactionButton">Add Transaction</button>`;
+    let addTransactionButton = document.querySelector("#addTransactionButton");
 })
 
 function createTransactionItem(transaction){
@@ -136,3 +132,7 @@ function createTransactionItem(transaction){
     newTransactionItem.innerHTML = `$${transaction.amount} purchase @${transaction.merchant} on ${transaction.date} in category ${transaction.category.name}`
     return newTransactionItem;
 }
+
+
+// start out on home page upon refresh/load
+homeButton.click();
