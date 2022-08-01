@@ -5,11 +5,19 @@ const goalsButton = document.querySelector("#goals");
 const spendingButton = document.querySelector("#spending");
 const navbarSettings = document.getElementById("settings");
 const options = document.querySelector("#options");
+const chart = document.getElementById("myChart");
+
+// sanitize 
+function sanitize() {
+    content.innerHTML = "";
+    options.innerHTML = "";
+    chart.innerHTML = "";
+}
 
 // HOME PAGE
 homeButton.addEventListener("click", event => {
     // sanitize options div upon load (make this a function/adjust this setting)
-    options.innerHTML = "";
+    sanitize();
     fetch(`${URL}/users/1`)
         .then(response => response.json())
         .then(data => {
@@ -22,6 +30,7 @@ homeButton.addEventListener("click", event => {
 
 // GOALS PAGE
 goalsButton.addEventListener("click", event => {
+    sanitize();
     // get all goals & display
     fetch(`${URL}/goals`)
         .then(response => response.json())
@@ -116,6 +125,7 @@ function createGoalCard(goal){
 
 // SPENDING PAGE
 spendingButton.addEventListener("click", event => {
+    sanitize();
     fetch(`${URL}/transactions`)
         .then(response => response.json())
         .then(data => {
@@ -137,6 +147,34 @@ spendingButton.addEventListener("click", event => {
             content.appendChild(transactionsTable);
             let transactionsTableBody = document.querySelector("#transactionsTableBody");
             data.forEach(transaction => transactionsTableBody.appendChild(createTransactionItem(transaction)))
+
+            // once all transactions are compiled, generate a pie chart
+            const chartData = {
+                labels: [
+                  'Red',
+                  'Blue',
+                  'Yellow'
+                ],
+                datasets: [{
+                  label: 'My First Dataset',
+                  data: [300, 50, 100],
+                  backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 205, 86)'
+                  ],
+                  hoverOffset: 4
+                }]
+            };
+            const config = {
+                type: 'pie',
+                data: chartData,
+            };
+
+            const myChart = new Chart(
+                document.getElementById('myChart'),
+                config
+            );
         })
 
     options.innerHTML = 
