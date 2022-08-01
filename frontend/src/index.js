@@ -52,7 +52,7 @@ goalsButton.addEventListener("click", event => {
             let newGoalBody = {
                 name: newGoalName,
                 amount: newGoalAmount,
-                target: "now",
+                target: "2022-08-01",
                 image: newGoalImage,
                 user_id: 1
             };
@@ -125,8 +125,41 @@ spendingButton.addEventListener("click", event => {
 
     options.innerHTML = 
         `<h3>Options</h3>
-        <button id="addTransactionButton">Add Transaction</button>`;
+        <button id="addTransactionButton">Add Transaction</button>
+        <label for="transactionAmount">Transaction amount: $ </label>
+        <input id="transactionAmount" type="number" name="transactionAmount"/> <br/>
+        <label for="transactionDate">Transaction date: $</label>
+        <input id="transactionDate" type="text" name="transactionDate"/> <br/>
+        <label for="transactionMerchant">Merchant: </label>
+        <input id="transactionMerchant" type="text" name="transactionMerchant"/>`;
+
     let addTransactionButton = document.querySelector("#addTransactionButton");
+    addTransactionButton.addEventListener("click", event => {
+        let newTransactionAmount = document.querySelector("#transactionAmount").value;
+        let newTransactionDate = document.querySelector("#transactionDate").value;
+        let newTransactionMerchant = document.querySelector("#transactionMerchant").value;
+        
+        let newTransactionBody = {
+            amount: newTransactionAmount,
+            date: newTransactionDate,
+            merchant: newTransactionMerchant,
+            user_id: 1,
+            category_id: 1
+        };
+        
+        let configurationObject = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify(newTransactionBody)
+        }
+
+        fetch(`${URL}/transactions`, configurationObject)
+            .then(response => response.json())
+            .then(data => content.appendChild(createTransactionItem(data)));
+    })
 })
 
 function createTransactionItem(transaction){
