@@ -112,6 +112,7 @@ function createGoalCard(goal){
     return newGoalCard;
 }
 
+
 // SPENDING PAGE
 spendingButton.addEventListener("click", event => {
     fetch(`${URL}/transactions`)
@@ -120,17 +121,31 @@ spendingButton.addEventListener("click", event => {
             content.innerHTML = 
                 `<h1 class="title">Spending</h1>
                 <h2 id="displayName" class="subtitle">View transactions & set a budget.</h2>`;
-            data.forEach(transaction => content.appendChild(createTransactionItem(transaction)));
+            // create table
+            let transactionsTable = document.createElement("table");
+            transactionsTable.className += "table";
+            transactionsTable.innerHTML = 
+                `<thead>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Merchant</th>
+                    <th>Category</th>
+                </thead>
+                <tbody id="transactionsTableBody">
+                </tbody>`
+            content.appendChild(transactionsTable);
+            let transactionsTableBody = document.querySelector("#transactionsTableBody");
+            data.forEach(transaction => transactionsTableBody.appendChild(createTransactionItem(transaction)))
         })
 
     options.innerHTML = 
         `<h3>Options</h3>
         <button id="addTransactionButton">Add Transaction</button>
-        <label for="transactionAmount">Transaction amount: $ </label>
+        <label for="transactionAmount">Transaction amount ($XX.XX): $ </label>
         <input id="transactionAmount" type="number" name="transactionAmount"/> <br/>
-        <label for="transactionDate">Transaction date: $</label>
+        <label for="transactionDate">Transaction date (Month Day, Year): </label>
         <input id="transactionDate" type="text" name="transactionDate"/> <br/>
-        <label for="transactionMerchant">Merchant: </label>
+        <label for="transactionMerchant">Merchant (e.g., Starbucks): </label>
         <input id="transactionMerchant" type="text" name="transactionMerchant"/>`;
 
     let addTransactionButton = document.querySelector("#addTransactionButton");
@@ -158,13 +173,17 @@ spendingButton.addEventListener("click", event => {
 
         fetch(`${URL}/transactions`, configurationObject)
             .then(response => response.json())
-            .then(data => content.appendChild(createTransactionItem(data)));
+            .then(data => transactionsTableBody.appendChild(createTransactionItem(data)));
     })
 })
 
-function createTransactionItem(transaction){
-    let newTransactionItem = document.createElement("li");
-    newTransactionItem.innerHTML = `$${transaction.amount} purchase @${transaction.merchant} on ${transaction.date} in category ${transaction.category.name}`
+function createTransactionItem(transaction) {
+    let newTransactionItem = document.createElement("tr");
+    newTransactionItem.innerHTML =
+        `<th>${transaction.date}</th>
+        <td>${transaction.amount}</td>
+        <td>${transaction.merchant}</td>
+        <td>${transaction.category.name}</td>`
     return newTransactionItem;
 }
 
