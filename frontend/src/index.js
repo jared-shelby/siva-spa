@@ -8,6 +8,8 @@ const options = document.querySelector("#options");
 
 // HOME PAGE
 homeButton.addEventListener("click", event => {
+    // sanitize options div upon load (make this a function/adjust this setting)
+    options.innerHTML = "";
     fetch(`${URL}/users/1`)
         .then(response => response.json())
         .then(data => {
@@ -15,36 +17,6 @@ homeButton.addEventListener("click", event => {
                 `<h1 class="title">Home</h1>
                 <h2 id="displayName" class="subtitle">Welcome back, ${data.name.split(" ")[0]}.</h2>`;
         })
-
-    // allow user to change their name
-    options.innerHTML = 
-        `<h3>Options</h3>
-        <button id="changeNameButton">Change Name</button> <br/>
-        <label for="name">Full Name: </label>
-        <input id="name" type="text" name="name"/>`;
-    
-    let changeNameButton = document.querySelector("#changeNameButton");
-    changeNameButton.addEventListener("click", event => {
-        let newName = document.querySelector("#name").value;
-        
-        let newNameBody = { name: newName };
-        
-        let configurationObject = {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            body: JSON.stringify(newNameBody)
-        }
-
-        fetch(`${URL}/users/1`, configurationObject)
-            .then(response => response.json())
-            .then(data => {
-                document.querySelector("#displayName").innerHTML = `Hi, ${data.name}`;
-                document.querySelector("#name").value = "";
-            });
-    })
 })
 
 // GOALS PAGE
@@ -165,10 +137,53 @@ function createTransactionItem(transaction){
 
 // SETTINGS PAGE
 navbarSettings.addEventListener("click", event => {
-    content.innerHTML = 
-        `<h1 class="title">Settings</h1>
-        <h2 id="displayName" class="subtitle">Manage your account.</h2>`;
+    options.innerHTML = "";
+    fetch(`${URL}/users/1`)
+    .then(response => response.json())
+    .then(data => {
+        content.innerHTML = 
+            `<h1 class="title">Settings</h1>
+            <h2 id="displayName" class="subtitle">Manage your account.</h2>
+            <ul>
+                <li id="userName"><strong>Name: </strong>${data.name}</li>
+                <button id="changeName" class="button is-light">Change Name</button>
+                <li><strong>Email: </strong>example@siva.com</li>
+                <li><strong>Phone number: </strong>(123) 456-7890</li>
+            </ul>`;
+            
+        let changeNameButton = document.querySelector("#changeName");
+        changeNameButton.addEventListener("click", event => {
+            options.innerHTML = 
+                `<hr/><h3 class="is-size-4">Change name form</h3>
+                <label for="name">Full Name: </label>
+                <input id="name" class="input" type="text" name="name"/>
+                <button id="submit" class="button is-dark">Submit</button> <br/>`;
     
+            let submitNameChangeButton = document.getElementById("submit");
+            submitNameChangeButton.addEventListener("click", event => {
+                let newName = document.querySelector("#name").value;
+                
+                let newNameBody = { name: newName };
+                
+                let configurationObject = {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify(newNameBody)
+                }
+    
+                fetch(`${URL}/users/1`, configurationObject)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById("userName").innerHTML = `<strong>Name: </strong>${data.name}`;
+                        document.querySelector("#name").value = "";
+                        options.innerHTML = "";
+                    });
+            })
+        })
+    })
 })
 
 
