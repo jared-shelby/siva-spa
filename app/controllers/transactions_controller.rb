@@ -9,6 +9,11 @@ class TransactionsController < ApplicationController
         render json: transaction, except: [:created_at, :updated_at, :user_id, :category_id], include: [:user, :category]
     end
 
+    def destroy
+        transaction = Transaction.find(params[:id]).destroy
+        render json: transaction
+    end
+
     private
 
     def transaction_params
