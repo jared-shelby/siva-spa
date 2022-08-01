@@ -175,15 +175,27 @@ spendingButton.addEventListener("click", event => {
             .then(response => response.json())
             .then(data => transactionsTableBody.appendChild(createTransactionItem(data)));
     })
+
+    // once all transactions are listed, listen for click on delete button
+    content.addEventListener("click", event => {
+        if (event.target.id === "deleteTransaction") {
+            // find nearest transaction (tr), get dataset id, and send delete request
+            fetch(`${URL}/transactions/${event.target.parentElement.dataset.id}`, { method: "DELETE" })
+                .then(response => response.json())
+                .then(data => event.target.parentElement.remove());
+        }
+    })
 })
 
 function createTransactionItem(transaction) {
     let newTransactionItem = document.createElement("tr");
+    newTransactionItem.dataset.id = transaction.id;
     newTransactionItem.innerHTML =
         `<th>${transaction.date}</th>
         <td>${transaction.amount}</td>
         <td>${transaction.merchant}</td>
-        <td>${transaction.category.name}</td>`
+        <td>${transaction.category.name}</td>
+        <button id="deleteTransaction" class="delete"></button>`
     return newTransactionItem;
 }
 
