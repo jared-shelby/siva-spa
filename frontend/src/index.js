@@ -3,6 +3,7 @@ const content = document.querySelector("#content");
 const homeButton = document.querySelector("#home");
 const goalsButton = document.querySelector("#goals");
 const spendingButton = document.querySelector("#spending");
+const navbarSettings = document.getElementById("settings");
 const options = document.querySelector("#options");
 
 // HOME PAGE
@@ -12,7 +13,7 @@ homeButton.addEventListener("click", event => {
         .then(data => {
             content.innerHTML = 
                 `<h1 class="title">Home</h1>
-                <p id="displayName" class="subtitle">Hi, ${data.name.split(" ")[0]}</p>`;
+                <h2 id="displayName" class="subtitle">Welcome back, ${data.name.split(" ")[0]}.</h2>`;
         })
 
     // allow user to change their name
@@ -52,7 +53,9 @@ goalsButton.addEventListener("click", event => {
     fetch(`${URL}/goals`)
         .then(response => response.json())
         .then(data => {
-            content.innerHTML = `<h2>Goals</h2>`;
+            content.innerHTML = 
+                `<h1 class="title">Milestones</h1>
+                <h2 id="displayName" class="subtitle">Focus on your goals & track your progress.</h2>`;
             data.forEach(goal => content.appendChild(createGoalCard(goal)));
         })
 
@@ -142,7 +145,9 @@ spendingButton.addEventListener("click", event => {
     fetch(`${URL}/transactions`)
         .then(response => response.json())
         .then(data => {
-            content.innerHTML = `<h2>Spending</h2>`;
+            content.innerHTML = 
+                `<h1 class="title">Spending</h1>
+                <h2 id="displayName" class="subtitle">View transactions & set a budget.</h2>`;
             data.forEach(transaction => content.appendChild(createTransactionItem(transaction)));
         })
 
@@ -157,6 +162,14 @@ function createTransactionItem(transaction){
     newTransactionItem.innerHTML = `$${transaction.amount} purchase @${transaction.merchant} on ${transaction.date} in category ${transaction.category.name}`
     return newTransactionItem;
 }
+
+// SETTINGS PAGE
+navbarSettings.addEventListener("click", event => {
+    content.innerHTML = 
+        `<h1 class="title">Settings</h1>
+        <h2 id="displayName" class="subtitle">Manage your account.</h2>`;
+    
+})
 
 
 // start out on home page upon refresh/load
