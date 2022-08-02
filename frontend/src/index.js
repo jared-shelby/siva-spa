@@ -114,16 +114,39 @@ navbarGoals.addEventListener("click", event => {
 
 function createGoalCard(goal){
     let newGoalCard = document.createElement("div");
-    newGoalCard.dataset.id = goal.id;
-    newGoalCard.innerHTML = 
-        `<h3>${goal.name}</h3>
-        <button id="editGoal">Edit</button>
-        <button id="deleteGoal">Delete</button>
-        <ul>
-            <li>Amount: $${goal.amount}</li>
-            <li>Target Date: ${goal.date}</li>
-            <img src=${goal.image} width=100px height=100px/>
-        </ul>`
+    newGoalCard.classList += "column is-4";
+    newGoalCard.innerHTML = `<div class="card">
+    <div class="card-image">
+        <img src=${goal.image}>
+    </div>
+    <div class="card-content">
+      <div class="media">
+        <div class="media-left">
+            <img src="./assets/goals.png" width="50px" height="50px">
+        </div>
+        <div class="media-content">
+          <p class="title is-4">${goal.name}</p>
+          <p class="subtitle is-6">${goal.amount}</p>
+        </div>
+      </div>
+  
+      <div class="content">
+        Goal description
+        <br>
+        <time>${goal.target}</time>
+      </div>
+    </div>
+    </div>`
+    // newGoalCard.dataset.id = goal.id;
+    // newGoalCard.innerHTML = 
+    //     `<h3>${goal.name}</h3>
+    //     <button id="editGoal">Edit</button>
+    //     <button id="deleteGoal">Delete</button>
+    //     <ul>
+    //         <li>Amount: $${goal.amount}</li>
+    //         <li>Target Date: ${goal.date}</li>
+    //         <img src=${goal.image} width=100px height=100px/>
+    //     </ul>`
     return newGoalCard;
 }
 
