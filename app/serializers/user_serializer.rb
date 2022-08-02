@@ -1,5 +1,5 @@
 class UserSerializer < ActiveModel::Serializer
-  attributes :id, :name, :total_spent
+  attributes :id, :name, :email, :total_spent
   has_many :goals
   has_many :transactions
 
