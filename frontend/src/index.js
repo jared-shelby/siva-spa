@@ -42,7 +42,7 @@ navbarGoals.addEventListener("click", event => {
         .then(data => {
             content.innerHTML = 
                 `<h1 class="title">Milestones</h1>
-                <h2 id="displayName" class="subtitle">Focus on your goals & track your progress.</h2>`;
+                <h2 class="subtitle">Focus on your goals & track your progress.</h2>`;
             data.forEach(goal => content.appendChild(createGoalCard(goal)));
         })
 
@@ -115,6 +115,7 @@ navbarGoals.addEventListener("click", event => {
 function createGoalCard(goal){
     let newGoalCard = document.createElement("div");
     newGoalCard.classList += "column is-4";
+    newGoalCard.dataset.id = goal.id;
     newGoalCard.innerHTML = `<div class="card">
     <div class="card-image">
         <img src=${goal.image}>
@@ -131,13 +132,16 @@ function createGoalCard(goal){
       </div>
   
       <div class="content">
-        Goal description
-        <br>
-        <time>${goal.target}</time>
+        <progress class="progress is-small is-dark" max="100"></progress>
+        <span>${goal.description}</span>
+        <br/>
+        <span>${goal.target}</span>
+        <br/>
+        <button id="editGoal" class="button is-small is-light">Edit</button>
+        <button id="deleteGoal" class="button is-small is-dark">Delete</button>
       </div>
     </div>
     </div>`
-    // newGoalCard.dataset.id = goal.id;
     // newGoalCard.innerHTML = 
     //     `<h3>${goal.name}</h3>
     //     <button id="editGoal">Edit</button>
