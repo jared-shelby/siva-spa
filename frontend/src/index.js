@@ -1,21 +1,22 @@
+// constants
 const URL = "http://localhost:3000"
-const content = document.querySelector("#content");
-const homeButton = document.querySelector("#home");
-const goalsButton = document.querySelector("#goals");
-const spendingButton = document.querySelector("#spending");
+const content = document.getElementById("content");
+const navbarHome = document.getElementById("home");
+const navbarGoals = document.getElementById("goals");
+const navbarSpending = document.getElementById("spending");
 const navbarSettings = document.getElementById("settings");
-const options = document.querySelector("#options");
-const chart = document.getElementById("myChart");
+const options = document.getElementById("options");
+const charts = document.getElementById("charts");
 
 // sanitize 
 function sanitize() {
     content.innerHTML = "";
     options.innerHTML = "";
-    chart.innerHTML = "";
+    charts.innerHTML = "";
 }
 
 // HOME PAGE
-homeButton.addEventListener("click", event => {
+navbarHome.addEventListener("click", event => {
     // sanitize options div upon load (make this a function/adjust this setting)
     sanitize();
     fetch(`${URL}/users/1`)
@@ -29,7 +30,7 @@ homeButton.addEventListener("click", event => {
 })
 
 // GOALS PAGE
-goalsButton.addEventListener("click", event => {
+navbarGoals.addEventListener("click", event => {
     sanitize();
     // get all goals & display
     fetch(`${URL}/goals`)
@@ -124,7 +125,7 @@ function createGoalCard(goal){
 
 
 // SPENDING PAGE
-spendingButton.addEventListener("click", event => {
+navbarSpending.addEventListener("click", event => {
     sanitize();
     fetch(`${URL}/transactions`)
         .then(response => response.json())
@@ -149,6 +150,9 @@ spendingButton.addEventListener("click", event => {
             data.forEach(transaction => transactionsTableBody.appendChild(createTransactionItem(transaction)))
 
             // once all transactions are compiled, generate a pie chart
+            let newChart = document.createElement("canvas");
+            newChart.id = "myChart";
+            charts.appendChild(newChart);
             const chartData = {
                 labels: [
                   'Red',
@@ -246,7 +250,7 @@ navbarSettings.addEventListener("click", event => {
     .then(data => {
         content.innerHTML = 
             `<h1 class="title">Settings</h1>
-            <h2 id="displayName" class="subtitle">Manage your account.</h2>
+            <h2 class="subtitle">Manage your account.</h2>
             <ul>
                 <li id="userName"><strong>Name: </strong>${data.name}</li>
                 <button id="changeName" class="button is-light">Change Name</button>
@@ -291,4 +295,4 @@ navbarSettings.addEventListener("click", event => {
 
 
 // start out on home page upon refresh/load
-homeButton.click();
+navbarHome.click();
