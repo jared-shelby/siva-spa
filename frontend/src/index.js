@@ -257,11 +257,16 @@ navbarSettings.addEventListener("click", event => {
         content.innerHTML = 
             `<h1 class="title">Settings</h1>
             <h2 class="subtitle">Manage your account.</h2>
+            <h3>Account details:</h3>
             <ul>
                 <li><strong>Name: </strong><span id="name">${data.name}</span></li>
                 <li><strong>Email: </strong><span id="email">${data.email}</span></li>
-                <br/>
-                <button id="editAccountDetails" class="button is-light">Edit account details</button>
+            </ul>
+            <button id="editAccountDetails" class="button is-light">Edit account details</button>
+            <h3>Statistics:</h3>
+            <ul>
+                <li><strong>Current milestones: </strong>${data.goals.length}</li>
+                <li><strong>Most recent transaction: </strong>${data.transactions[0].date}</li>
             </ul>`;
 
         let editAccountDetails = document.getElementById("editAccountDetails");
