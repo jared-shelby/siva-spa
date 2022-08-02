@@ -3,5 +3,5 @@ Rails.application.routes.draw do
   resources :transactions
   resources :goals
   resources :users
-  resources :sessions
+  # resources :sessions
 end

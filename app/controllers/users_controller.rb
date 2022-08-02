@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+    # before_action :require_login
+
     def show
         user = User.find(params[:id])
         render json: user
@@ -15,4 +17,9 @@ class UsersController < ApplicationController
     def user_params
         params.require(:user).permit(:name)
     end
+
+    # for login
+    # def require_login
+    #     return head(:forbidden) unless session.include? :user_id
+    # end
 end
