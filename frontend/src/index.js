@@ -6,6 +6,52 @@ const spendingButton = document.querySelector("#spending");
 const navbarSettings = document.getElementById("settings");
 const options = document.querySelector("#options");
 const chart = document.getElementById("myChart");
+let user_id = 0;
+
+// auth
+function checkLoggedIn() {
+    fetch(`${URL}/users/${user_id}`)
+        .then(response => {
+            if (response.status === 403) {
+                content.innerHTML = "Login or signup"
+            } else {
+                content.innerHTML = "signed in"
+        }})
+}
+
+checkLoggedIn();
+
+let login = document.querySelector("#login");
+login.addEventListener("click", event => {
+    content.innerHTML = `<label for="email">Email: </label>
+    <input id="email" type="text" name="email"/> <br/>
+    <label for="password">Password: </label>
+    <input id="password" type="password" name="password"/>
+    <button id="submit">Login</button>`
+    let submitBtn = document.querySelector("#submit");
+    submitBtn.addEventListener("click", event => {
+        let loginBody = {
+            email: document.querySelector("#email").value,
+            password: document.querySelector("#password").value
+        };
+        
+        let configurationObject = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify(loginBody)
+        }
+        fetch(`${URL}/login`, configurationObject)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                user_id = data.id
+            })
+    })
+})
+// practice ^
 
 // sanitize 
 function sanitize() {
@@ -288,7 +334,3 @@ navbarSettings.addEventListener("click", event => {
         })
     })
 })
-
-
-// start out on home page upon refresh/load
-homeButton.click();

@@ -1,5 +1,5 @@
 # Clear old seed data before re-seeding
-jared = User.create(name: "Jared Shelby")
+jared = User.create(name: "Jared Shelby", email: "jared.shelby@yale.edu", password: "hello")
 
 ski = Goal.create(name: "Ski Trip", amount: 2000, target: Time.now, image: "https://media.cntraveler.com/photos/5f84939a5f9755e5951db3f4/master/pass/WhitefishMountainResort-3.jpg", user: jared)
 home = Goal.create(name: "New House", amount: 40000, target: Time.now, image: "https://media.cntraveler.com/photos/5f84939a5f9755e5951db3f4/master/pass/WhitefishMountainResort-3.jpg", user: jared)

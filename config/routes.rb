@@ -3,5 +3,8 @@ Rails.application.routes.draw do
   resources :transactions
   resources :goals
   resources :users
-  # resources :sessions
+  resources :sessions
+
+  get 'login', to: 'sessions#new'
+  post 'login', to: 'sessions#create'
 end

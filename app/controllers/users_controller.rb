@@ -1,5 +1,11 @@
 class UsersController < ApplicationController
-    # before_action :require_login
+    before_action :require_login
+
+    def create
+        user = User.create(user_params)
+        session[:user_id] = user.id
+        render json: user
+    end
 
     def show
         user = User.find(params[:id])
@@ -15,11 +21,10 @@ class UsersController < ApplicationController
     private
 
     def user_params
-        params.require(:user).permit(:name)
+        params.require(:user).permit(:name, :email, :password)
     end
 
-    # for login
-    # def require_login
-    #     return head(:forbidden) unless session.include? :user_id
-    # end
+    def require_login
+        return head(:forbidden) unless session.include? :user_id
+    end
 end
