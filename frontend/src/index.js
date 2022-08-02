@@ -24,7 +24,7 @@ homeButton.addEventListener("click", event => {
             content.innerHTML = 
                 `<h1 class="title">Home</h1>
                 <h2 id="displayName" class="subtitle">Welcome back, ${data.name.split(" ")[0]}.</h2>
-                <p>$${data.total_spent} spent so far.`;
+                <p>${data.total_spent} spent so far.`;
         })
 })
 

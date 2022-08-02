@@ -4,6 +4,6 @@ class UserSerializer < ActiveModel::Serializer
   has_many :transactions
 
   def total_spent
-    object.transactions.sum { |t| t.amount }
+    Money.from_amount(object.transactions.sum { |t| t.amount }).format
   end
 end
