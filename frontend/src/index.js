@@ -244,7 +244,7 @@ function createTransactionItem(transaction) {
 
 // SETTINGS PAGE
 navbarSettings.addEventListener("click", event => {
-    options.innerHTML = "";
+    sanitize();
     fetch(`${URL}/users/1`)
     .then(response => response.json())
     .then(data => {
@@ -252,47 +252,85 @@ navbarSettings.addEventListener("click", event => {
             `<h1 class="title">Settings</h1>
             <h2 class="subtitle">Manage your account.</h2>
             <ul>
-                <li id="userName"><strong>Name: </strong>${data.name}</li>
-                <button id="changeName" class="button is-light">Change Name</button>
-                <li><strong>Email: </strong>${data.email}</li>
-                <li><strong>Phone number: </strong>(123) 456-7890</li>
+                <li><strong>Name: </strong><span id="name">${data.name}</span></li>
+                <li><strong>Email: </strong><span id="email">${data.email}</span></li>
+                <br/>
+                <button id="editAccountDetails" class="button is-light">Edit account details</button>
             </ul>`;
-            
-        let changeNameButton = document.querySelector("#changeName");
-        changeNameButton.addEventListener("click", event => {
-            options.innerHTML = 
-                `<hr/><h3 class="is-size-4">Change name form</h3>
-                <label for="name">Full Name: </label>
-                <input id="name" class="input" type="text" name="name"/>
-                <button id="submit" class="button is-dark">Submit</button> <br/>`;
-    
-            let submitNameChangeButton = document.getElementById("submit");
-            submitNameChangeButton.addEventListener("click", event => {
-                let newName = document.querySelector("#name").value;
+
+        let editAccountDetails = document.getElementById("editAccountDetails");
+        editAccountDetails.addEventListener("click", event => {
+            options.innerHTML = editAccountDetailsForm(document.getElementById("name").innerHTML, document.getElementById("email").innerHTML);
+
+            let form = document.getElementById("form");
+            let submit = document.getElementById("submit");
+            let cancel = document.getElementById("cancel");
+            cancel.addEventListener("click", event => form.remove());
+            submit.addEventListener("click", event => {
+                let newName = `${document.getElementById("newFirstname").value} ${document.getElementById("newLastname").value}`;
+                let newEmail = document.getElementById("newEmail").value;
+        
+                let requestBody = { 
+                    name: newName,
+                    email: newEmail 
+                };
                 
-                let newNameBody = { name: newName };
-                
-                let configurationObject = {
+                let configObject = {
                     method: "PATCH",
                     headers: {
                         "Content-Type": "application/json",
                         "Accept": "application/json"
                     },
-                    body: JSON.stringify(newNameBody)
+                    body: JSON.stringify(requestBody)
                 }
     
-                fetch(`${URL}/users/1`, configurationObject)
+                fetch(`${URL}/users/1`, configObject)
                     .then(response => response.json())
                     .then(data => {
-                        document.getElementById("userName").innerHTML = `<strong>Name: </strong>${data.name}`;
-                        document.querySelector("#name").value = "";
-                        options.innerHTML = "";
+                        document.getElementById("name").innerHTML = `${data.name}`;
+                        document.getElementById("email").innerHTML = `${data.email}`;
+                        form.remove();
                     });
             })
         })
     })
 })
 
+function editAccountDetailsForm(currentName, currentEmail) {
+    return `
+    <div id="form">
+        <hr/><h3>Edit Account Details</h3>
+        <div class="field">
+            <label class="label">First Name</label>
+            <div class="control">
+                <input id="newFirstname" class="input" type="text" value=${currentName.split(" ")[0]}>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Last Name</label>
+            <div class="control">
+                <input id="newLastname" class="input" type="text" value=${currentName.split(" ")[1]}>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Email</label>
+            <div class="control">
+                <input id="newEmail" class="input" type="email" value=${currentEmail}>
+            </div>
+        </div>
+        
+        <div class="field is-grouped">
+            <div class="control">
+                <button id="submit" class="button is-dark">Submit</button>
+            </div>
+            <div class="control">
+                <button id="cancel" class="button is-light">Cancel</button>
+            </div>
+        </div>
+    </div>`
+}
 
 // start out on home page upon refresh/load
 navbarHome.click();
