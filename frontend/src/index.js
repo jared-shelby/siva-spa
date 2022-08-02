@@ -250,7 +250,7 @@ navbarSettings.addEventListener("click", event => {
             <ul>
                 <li id="userName"><strong>Name: </strong>${data.name}</li>
                 <button id="changeName" class="button is-light">Change Name</button>
-                <li><strong>Email: </strong>example@siva.com</li>
+                <li><strong>Email: </strong>${data.email}</li>
                 <li><strong>Phone number: </strong>(123) 456-7890</li>
             </ul>`;
             
