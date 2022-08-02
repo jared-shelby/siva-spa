@@ -39,6 +39,9 @@ gem "rack-cors"
 # Use serializers for returning consistent data
 gem 'active_model_serializers'
 
+# Format and convert currency
+gem 'money-rails'
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
