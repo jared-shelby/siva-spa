@@ -7,9 +7,11 @@ const navbarSpending = document.getElementById("spending");
 const navbarSettings = document.getElementById("settings");
 const options = document.getElementById("options");
 const charts = document.getElementById("charts");
+const sidebar = document.getElementById("sidebar");
 
 // sanitize 
 function sanitize() {
+    sidebar.innerHTML = "";
     content.innerHTML = "";
     options.innerHTML = "";
     charts.innerHTML = "";
@@ -19,6 +21,7 @@ function sanitize() {
 navbarHome.addEventListener("click", event => {
     // sanitize options div upon load (make this a function/adjust this setting)
     sanitize();
+    sidebar.innerHTML = `<div class="pl-4"><img src="./assets/home.png"></div>`
     fetch(`${URL}/users/1`)
         .then(response => response.json())
         .then(data => {
@@ -32,6 +35,7 @@ navbarHome.addEventListener("click", event => {
 // GOALS PAGE
 navbarGoals.addEventListener("click", event => {
     sanitize();
+    sidebar.innerHTML = `<div class="pl-4"><img src="./assets/goals.png"></div>`
     // get all goals & display
     fetch(`${URL}/goals`)
         .then(response => response.json())
@@ -127,6 +131,7 @@ function createGoalCard(goal){
 // SPENDING PAGE
 navbarSpending.addEventListener("click", event => {
     sanitize();
+    sidebar.innerHTML = `<div class="pl-4"><img src="./assets/spending.png"></div>`
     fetch(`${URL}/transactions`)
         .then(response => response.json())
         .then(data => {
@@ -245,6 +250,7 @@ function createTransactionItem(transaction) {
 // SETTINGS PAGE
 navbarSettings.addEventListener("click", event => {
     sanitize();
+    sidebar.innerHTML = `<div class="pl-4"><img src="./assets/settings.png"></div>`
     fetch(`${URL}/users/1`)
     .then(response => response.json())
     .then(data => {
