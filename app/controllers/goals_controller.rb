@@ -9,6 +9,12 @@ class GoalsController < ApplicationController
         render json: goal
     end
 
+    def update
+        goal = Goal.find(params[:id])
+        goal.update(goal_params)
+        render json: goal
+    end
+
     def destroy
         goal = Goal.find(params[:id]).destroy
         render json: goal
@@ -17,6 +23,6 @@ class GoalsController < ApplicationController
     private
 
     def goal_params
-        params.require(:goal).permit(:name, :amount, :description, :target, :image, :user_id)
+        params.require(:goal).permit(:name, :amount, :funded, :description, :target, :image, :user_id)
     end
 end
