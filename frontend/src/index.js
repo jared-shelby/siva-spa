@@ -42,8 +42,36 @@ navbarGoals.addEventListener("click", event => {
         .then(data => {
             content.innerHTML = 
                 `<h1 class="title">Milestones</h1>
-                <h2 class="subtitle">Focus on your goals & track your progress.</h2>`;
-            data.forEach(goal => content.appendChild(createGoalCard(goal)));
+                <h2 class="subtitle">Focus on your goals & track your progress.</h2>
+                <div id="goalColumns" class="column is-4"></div>`;
+            let goalColumns = document.getElementById("goalColumns");
+            data.forEach(goal => goalColumns.appendChild(createGoalCard(goal)));
+
+            // once all goals are listed, listen for click on edit or delete buttons
+            goalColumns.addEventListener("click", event => {
+                if (event.target.id === "deleteGoal") {
+                    // find nearest goal (div), get dataset id, and send delete request
+                    fetch(`${URL}/goals/${event.target.parentElement.parentElement.parentElement.dataset.id}`, { method: "DELETE" })
+                        .then(response => response.json())
+                        .then(data => event.target.parentElement.parentElement.parentElement.remove());
+                } else if (event.target.id === "fundGoal") {
+                    // display form to fund goal
+                    // find nearest goal (div), get dataset id, and send patch request
+                    let updatedGoalBody = {
+                    }
+                    let configObj = {
+                        method: "PATCH",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Accept": "application/json"
+                        },
+                        body: JSON.stringify(updatedGoalBody)
+                    }
+                    fetch(`${URL}/goals/${event.target.parentElement.dataset.id}`, configObj)
+                        .then(response => response.json())
+                        .then(console.log);
+                }
+            })
         })
 
         // display options below all goals
@@ -85,39 +113,14 @@ navbarGoals.addEventListener("click", event => {
                 .then(response => response.json())
                 .then(data => content.appendChild(createGoalCard(data)));
         })
-
-        // once all goals are listed, listen for click on edit or delete buttons
-        content.addEventListener("click", event => {
-            if (event.target.id === "deleteGoal") {
-                // find nearest goal (div), get dataset id, and send delete request
-                fetch(`${URL}/goals/${event.target.parentElement.dataset.id}`, { method: "DELETE" })
-                    .then(response => response.json())
-                    .then(data => event.target.parentElement.remove());
-            } else if (event.target.id === "editGoal") {
-                // find nearest goal (div), get dataset id, and send patch request
-                let updatedGoalBody = {
-                }
-                let configObj = {
-                    method: "PATCH",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Accept": "application/json"
-                    },
-                    body: JSON.stringify(updatedGoalBody)
-                }
-                fetch(`${URL}/goals/${event.target.parentElement.dataset.id}`, configObj)
-                    .then(response => response.json())
-                    .then(console.log);
-            }
-        })
 })
 
 function createGoalCard(goal){
     let newGoalCard = document.createElement("div");
-    newGoalCard.classList += "column is-4";
+    newGoalCard.classList += "card";
     newGoalCard.dataset.id = goal.id;
-    newGoalCard.innerHTML = `<div class="card">
-    <div class="card-image">
+    newGoalCard.innerHTML =
+    `<div class="card-image">
         <img src=${goal.image}>
     </div>
     <div class="card-content">
@@ -137,20 +140,10 @@ function createGoalCard(goal){
         <br/>
         <span>${goal.target}</span>
         <br/>
-        <button id="editGoal" class="button is-small is-light">Edit</button>
+        <button id="fundGoal" class="button is-small is-light">Fund</button>
         <button id="deleteGoal" class="button is-small is-dark">Delete</button>
       </div>
-    </div>
     </div>`
-    // newGoalCard.innerHTML = 
-    //     `<h3>${goal.name}</h3>
-    //     <button id="editGoal">Edit</button>
-    //     <button id="deleteGoal">Delete</button>
-    //     <ul>
-    //         <li>Amount: $${goal.amount}</li>
-    //         <li>Target Date: ${goal.date}</li>
-    //         <img src=${goal.image} width=100px height=100px/>
-    //     </ul>`
     return newGoalCard;
 }
 
