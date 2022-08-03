@@ -145,12 +145,12 @@ function createGoalCard(goal){
         </div>
         <div class="media-content">
           <p class="title is-4">${goal.name}</p>
-          <p class="subtitle is-6">${goal.amount} by ${goal.target}</p>
+          <p class="subtitle is-6">${goal.amount_pretty} by ${goal.target}</p>
         </div>
       </div>
   
       <div class="content">
-        <progress class="progress is-small is-dark" max=${parseInt(goal.amount.slice(1))} value=${parseInt(goal.funded)}></progress>
+        <progress class="progress is-small is-dark" max=${parseFloat(goal.amount)} value=${parseFloat(goal.funded)}></progress>
         <p>${goal.description}</p>
         <button id="fundGoal" class="button is-small is-light">Fund</button>
         <button id="deleteGoal" class="button is-small is-dark">Delete</button>

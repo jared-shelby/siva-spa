@@ -1,8 +1,8 @@
 class GoalSerializer < ActiveModel::Serializer
-  attributes :id, :name, :amount, :funded, :description, :target, :image
+  attributes :id, :name, :amount, :amount_pretty, :funded, :description, :target, :image
   belongs_to :user
 
-  def amount
+  def amount_pretty
     Money.from_amount(object.amount).format
   end
 
