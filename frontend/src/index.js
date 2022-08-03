@@ -292,7 +292,9 @@ navbarSpending.addEventListener("click", event => {
         .then(data => {
             content.innerHTML = 
                 `<h1 class="title">Spending</h1>
-                <h2 id="displayName" class="subtitle">View transactions & set a budget.</h2>`;
+                <h2 id="displayName" class="subtitle">View transactions & set a budget.</h2>
+                <button id="addNewTransaction" class="button is-dark"><strong>+</strong></button>
+                <br/><br/>`;
             // create table
             let transactionsTable = document.createElement("table");
             transactionsTable.className += "table";
@@ -309,75 +311,56 @@ navbarSpending.addEventListener("click", event => {
             let transactionsTableBody = document.querySelector("#transactionsTableBody");
             data.forEach(transaction => transactionsTableBody.appendChild(createTransactionItem(transaction)))
 
-            // once all transactions are compiled, generate a pie chart
-            let newChart = document.createElement("canvas");
-            newChart.id = "myChart";
-            charts.appendChild(newChart);
-            const chartData = {
-                labels: [
-                  'Red',
-                  'Blue',
-                  'Yellow'
-                ],
-                datasets: [{
-                  label: 'My First Dataset',
-                  data: [300, 50, 100],
-                  backgroundColor: [
-                    'rgb(255, 99, 132)',
-                    'rgb(54, 162, 235)',
-                    'rgb(255, 205, 86)'
-                  ],
-                  hoverOffset: 4
-                }]
-            };
-            const config = {
-                type: 'pie',
-                data: chartData,
-            };
+            generateChart();
 
-            const myChart = new Chart(
-                document.getElementById('myChart'),
-                config
-            );
+            // button to add new transaction 
+            let newTransactionButton = document.getElementById("addNewTransaction");
+            newTransactionButton.addEventListener("click", event => {
+                charts.innerHTML = newTransactionForm();
+
+                let form = document.getElementById("form");
+                let submit = document.getElementById("submit");
+                let cancel = document.getElementById("cancel");
+
+                cancel.addEventListener("click", event => {
+                    form.remove();
+                    generateChart();
+                });
+                submit.addEventListener("click", event => {
+                    let newTransactionAmount = document.getElementById("newAmount").value;
+                    let newTransactionDate = document.getElementById("newDate").value;
+                    let newTransactionMerchant = document.getElementById("newMerchant").value;
+                    let newTransactionCategory = document.getElementById("newCategory").value;
+                    
+                    let newTransactionBody = {
+                        amount: newTransactionAmount,
+                        date: newTransactionDate,
+                        merchant: newTransactionMerchant,
+                        category_id: 1,
+                        user_id: 1
+                    };
+                    
+                    let configurationObject = {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Accept": "application/json"
+                        },
+                        body: JSON.stringify(newTransactionBody)
+                    }
+    
+                    fetch(`${URL}/transactions`, configurationObject)
+                        .then(response => response.json())
+                        .then(data => {
+                            transactionsTableBody.appendChild(createTransactionItem(data));
+                            form.remove();
+                            notify("New transaction successfully created. Happy budgeting!")
+                            generateChart();
+                        });
+                })
+            })
+
         })
-
-    options.innerHTML = 
-        `<h3>Options</h3>
-        <button id="addTransactionButton">Add Transaction</button>
-        <label for="transactionAmount">Transaction amount ($XX.XX): $ </label>
-        <input id="transactionAmount" type="number" name="transactionAmount"/> <br/>
-        <label for="transactionDate">Transaction date (Month Day, Year): </label>
-        <input id="transactionDate" type="text" name="transactionDate"/> <br/>
-        <label for="transactionMerchant">Merchant (e.g., Starbucks): </label>
-        <input id="transactionMerchant" type="text" name="transactionMerchant"/>`;
-
-    let addTransactionButton = document.querySelector("#addTransactionButton");
-    addTransactionButton.addEventListener("click", event => {
-        let newTransactionAmount = document.querySelector("#transactionAmount").value;
-        let newTransactionDate = document.querySelector("#transactionDate").value;
-        let newTransactionMerchant = document.querySelector("#transactionMerchant").value;
-        
-        let newTransactionBody = {
-            amount: newTransactionAmount,
-            date: newTransactionDate,
-            merchant: newTransactionMerchant,
-            user_id: 1,
-            category_id: 1
-        };
-        
-        let configurationObject = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            body: JSON.stringify(newTransactionBody)
-        }
-
-        fetch(`${URL}/transactions`, configurationObject)
-            .then(response => response.json())
-            .then(data => transactionsTableBody.appendChild(createTransactionItem(data)));
-    })
 
     // once all transactions are listed, listen for click on delete button
     content.addEventListener("click", event => {
@@ -400,6 +383,92 @@ function createTransactionItem(transaction) {
         <td>${transaction.category.name}</td>
         <button id="deleteTransaction" class="delete"></button>`
     return newTransactionItem;
+}
+
+function generateChart() {
+    // once all transactions are compiled, generate a pie chart
+    let newChart = document.createElement("div");
+    newChart.innerHTML = `<canvas id="myChart"></canvas>`;
+    charts.appendChild(newChart);
+    
+    const chartData = {
+        labels: [
+            'Red',
+            'Blue',
+            'Yellow'
+        ],
+        datasets: [{
+            label: 'My First Dataset',
+            data: [300, 50, 100],
+            backgroundColor: [
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)',
+            'rgb(255, 205, 86)'
+            ],
+            hoverOffset: 4
+        }]
+    };
+
+    const config = {
+        type: 'pie',
+        data: chartData,
+    };
+
+    const myChart = new Chart(
+        document.getElementById('myChart'),
+        config
+    );
+}
+
+function newTransactionForm() {
+    return `
+    <div id="form">
+        <hr/><h3 class="title is-size-4">Create New Transaction</h3>
+        <div class="field">
+            <label class="label">Amount ($)</label>
+            <div class="control">
+                <input id="newAmount" class="input" type="number" placeholder="e.g., 1000">
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Date</label>
+            <div class="control">
+                <input id="newDate" class="input" type="date" placeholder="e.g., 08/01/2022">
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Merchant</label>
+            <div class="control">
+                <input id="newMerchant" class="input" type="text" placeholder="e.g., Coffee Bean">
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Category</label>
+            <div class="select">
+                <select id="newCategory">
+                    <option>Food/Drink</option>
+                    <option>Entertainment</option>
+                    <option>Bills</option>
+                    <option>Health/Beauty</option>
+                    <option>Transportation</option>
+                    <option>Shopping</option>
+                    <option>Other</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="field is-grouped">
+            <div class="control">
+                <button id="submit" class="button is-dark">Submit</button>
+            </div>
+            <div class="control">
+                <button id="cancel" class="button is-light">Cancel</button>
+            </div>
+        </div>
+    </div>`
 }
 
 // SETTINGS PAGE
@@ -460,6 +529,7 @@ navbarSettings.addEventListener("click", event => {
                         document.getElementById("name").innerHTML = `${data.name}`;
                         document.getElementById("email").innerHTML = `${data.email}`;
                         form.remove();
+                        notify("Your account details have been updated successfully.")
                     });
             })
         })
