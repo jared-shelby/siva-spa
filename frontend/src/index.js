@@ -43,10 +43,13 @@ navbarGoals.addEventListener("click", event => {
             content.innerHTML = 
                 `<h1 class="title">Milestones</h1>
                 <h2 class="subtitle">Focus on your goals & track your progress.</h2>
+                <button id="addNewGoal" class="button is-dark"><strong>+</strong></button>
+                <br/><br/>
                 <div id="goalColumns" class="columns">
                     <div id="even" class="column is-5"></div>
-                    <div class="column is-2"></div>
+                    <div class="column is-1"></div>
                     <div id="odd" class="column is-5"></div>
+                    <div class="column is-1"></div>
                 </div>`;
             let goalColumns = document.getElementById("goalColumns");
             let evenColumn = document.getElementById("even");
@@ -69,6 +72,7 @@ navbarGoals.addEventListener("click", event => {
                     fetch(`${URL}/goals/${event.target.parentElement.parentElement.parentElement.dataset.id}`, { method: "DELETE" })
                         .then(response => response.json())
                         .then(data => event.target.parentElement.parentElement.parentElement.remove());
+                    num -= 1;
                 } else if (event.target.id === "fundGoal") {
                     // display form to fund goal
                     // find nearest goal (div), get dataset id, and send patch request
@@ -87,46 +91,58 @@ navbarGoals.addEventListener("click", event => {
                         .then(console.log);
                 }
             })
-        })
-
-        // display options below all goals
-        options.innerHTML = 
-            `<h3>Options</h3>
-            <button id="newGoal">Add Goal</button> <br/>
-            <label for="goalName">Goal Name: </label>
-            <input id="goalName" type="text" name="goalName"/> <br/>
-            <label for="goalAmount">Goal Amount: $</label>
-            <input id="goalAmount" type="text" name="goalAmount"/> <br/>
-            <label for="goalImage">Goal Image Link: </label>
-            <input id="goalImage" type="text" name="goalImage"/>`;
         
-        // button to add new goal 
-        let newGoalButton = document.querySelector("#newGoal");
-        newGoalButton.addEventListener("click", event => {
-            let newGoalName = document.querySelector("#goalName").value;
-            let newGoalAmount = document.querySelector("#goalAmount").value;
-            let newGoalImage = document.querySelector("#goalImage").value;
-            
-            let newGoalBody = {
-                name: newGoalName,
-                amount: newGoalAmount,
-                target: "2022-08-01",
-                image: newGoalImage,
-                user_id: 1
-            };
-            
-            let configurationObject = {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
-                },
-                body: JSON.stringify(newGoalBody)
-            }
+            // button to add new goal 
+            let newGoalButton = document.getElementById("addNewGoal");
+            newGoalButton.addEventListener("click", event => {
+                charts.innerHTML = newGoalForm();
 
-            fetch(`${URL}/goals`, configurationObject)
-                .then(response => response.json())
-                .then(data => content.appendChild(createGoalCard(data)));
+                let form = document.getElementById("form");
+                let submit = document.getElementById("submit");
+                let cancel = document.getElementById("cancel");
+
+                cancel.addEventListener("click", event => form.remove());
+                submit.addEventListener("click", event => {
+                    let newGoalName = document.getElementById("newName").value;
+                    let newGoalDescription = document.getElementById("newDescription").value;
+                    let newGoalAmount = document.getElementById("newAmount").value;
+                    let newGoalTarget = document.getElementById("newTarget").value;
+                    let newGoalImage = document.getElementById("newImage").value;
+                    
+                    let newGoalBody = {
+                        name: newGoalName,
+                        description: newGoalDescription,
+                        amount: newGoalAmount,
+                        funded: 0,
+                        target: newGoalTarget,
+                        image: newGoalImage,
+                        user_id: 1
+                    };
+                    
+                    let configurationObject = {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Accept": "application/json"
+                        },
+                        body: JSON.stringify(newGoalBody)
+                    }
+    
+                    fetch(`${URL}/goals`, configurationObject)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (num % 2 === 0 || num === 0) {
+                                evenColumn.appendChild(createGoalCard(data));
+                                num += 1;
+                            } else {
+                                oddColumn.appendChild(createGoalCard(data))
+                                num += 1;
+                            }
+                            form.remove();
+                            notify("New milestone successfully created. Happy saving!");
+                        });
+                })
+            })
         })
 })
 
@@ -157,6 +173,68 @@ function createGoalCard(goal){
       </div>
     </div>`
     return newGoalCard;
+}
+
+function newGoalForm() {
+    return `
+    <div id="form">
+        <hr/><h3 class="title is-size-4">Create New Milestone</h3>
+        <div class="field">
+            <label class="label">Name</label>
+            <div class="control">
+                <input id="newName" class="input" type="text" placeholder="e.g., Summer Vacation">
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Description</label>
+            <div class="control">
+                <textarea id="newDescription" class="textarea" placeholder="e.g., Super excited to have some summer fun with family & friends!"></textarea>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Amount ($)</label>
+            <div class="control">
+                <input id="newAmount" class="input" type="number" placeholder="e.g., 1000">
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Target Date</label>
+            <div class="control">
+                <input id="newTarget" class="input" type="date" placeholder="e.g., 07/01/2022">
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Image (URL)</label>
+            <div class="control">
+                <input id="newImage" class="input" type="text" placeholder="e.g., https://www.siva.com/image_url">
+            </div>
+        </div>
+        
+        <div class="field is-grouped">
+            <div class="control">
+                <button id="submit" class="button is-dark">Submit</button>
+            </div>
+            <div class="control">
+                <button id="cancel" class="button is-light">Cancel</button>
+            </div>
+        </div>
+    </div>`
+}
+
+// insert notification in right sidebar w/ delete button
+function notify(string) {
+    let notification = document.createElement("div");
+    notification.classList += "notification";
+    notification.innerHTML = 
+        `<button id="deleteNotification" class="delete"></button>
+        ${string}`
+    charts.appendChild(notification);
+    let deleteNotification = document.getElementById("deleteNotification");
+    deleteNotification.addEventListener("click", event => notification.remove());
 }
 
 
@@ -284,9 +362,9 @@ navbarSettings.addEventListener("click", event => {
     sanitize();
     sidebar.innerHTML = `<div class="pl-4"><img src="./assets/settings.png"></div>`
     fetch(`${URL}/users/1`)
-    .then(response => response.json())
-    .then(data => {
-        content.innerHTML = 
+        .then(response => response.json())
+        .then(data => {
+            content.innerHTML = 
             `<h1 class="title">Settings</h1>
             <h2 class="subtitle">Manage your account.</h2>
             <h3>Account details:</h3>
@@ -303,7 +381,7 @@ navbarSettings.addEventListener("click", event => {
 
         let editAccountDetails = document.getElementById("editAccountDetails");
         editAccountDetails.addEventListener("click", event => {
-            options.innerHTML = editAccountDetailsForm(document.getElementById("name").innerHTML, document.getElementById("email").innerHTML);
+            charts.innerHTML = editAccountDetailsForm(document.getElementById("name").innerHTML, document.getElementById("email").innerHTML);
 
             let form = document.getElementById("form");
             let submit = document.getElementById("submit");
@@ -342,7 +420,7 @@ navbarSettings.addEventListener("click", event => {
 function editAccountDetailsForm(currentName, currentEmail) {
     return `
     <div id="form">
-        <hr/><h3>Edit Account Details</h3>
+        <hr/><h3 class="title is-size-4">Edit Account Details</h3>
         <div class="field">
             <label class="label">First Name</label>
             <div class="control">
