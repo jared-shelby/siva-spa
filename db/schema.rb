@@ -23,6 +23,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_27_193046) do
   create_table "goals", force: :cascade do |t|
     t.string "name"
     t.decimal "amount"
+    t.decimal "funded"
     t.string "description"
     t.datetime "target"
     t.string "image"
