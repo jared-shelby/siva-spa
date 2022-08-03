@@ -422,6 +422,10 @@ navbarSettings.addEventListener("click", event => {
             <ul>
                 <li><strong>Current milestones: </strong>${data.goals.length}</li>
                 <li><strong>Most recent transaction: </strong>${data.transactions[0].date}</li>
+            </ul>
+            <h3>Milestones achieved:</h3>
+            <ul>
+                <li><strong>[Ski Trip:] </strong>[$20,000]</li>
             </ul>`;
 
         let editAccountDetails = document.getElementById("editAccountDetails");
