@@ -43,9 +43,24 @@ navbarGoals.addEventListener("click", event => {
             content.innerHTML = 
                 `<h1 class="title">Milestones</h1>
                 <h2 class="subtitle">Focus on your goals & track your progress.</h2>
-                <div id="goalColumns" class="column is-4"></div>`;
+                <div id="goalColumns" class="columns">
+                    <div id="even" class="column is-5"></div>
+                    <div class="column is-2"></div>
+                    <div id="odd" class="column is-5"></div>
+                </div>`;
             let goalColumns = document.getElementById("goalColumns");
-            data.forEach(goal => goalColumns.appendChild(createGoalCard(goal)));
+            let evenColumn = document.getElementById("even");
+            let oddColumn = document.getElementById("odd");
+            let num = 0;
+            data.forEach(goal => {
+                if (num % 2 === 0 || num === 0) {
+                    evenColumn.appendChild(createGoalCard(goal));
+                    num += 1;
+                } else {
+                    oddColumn.appendChild(createGoalCard(goal))
+                    num += 1;
+                }
+            });
 
             // once all goals are listed, listen for click on edit or delete buttons
             goalColumns.addEventListener("click", event => {
@@ -117,11 +132,11 @@ navbarGoals.addEventListener("click", event => {
 
 function createGoalCard(goal){
     let newGoalCard = document.createElement("div");
-    newGoalCard.classList += "card";
+    newGoalCard.classList += "card mb-4";
     newGoalCard.dataset.id = goal.id;
     newGoalCard.innerHTML =
     `<div class="card-image">
-        <img src=${goal.image}>
+        <img src=${goal.image} style="width: 100%; height: 250px">
     </div>
     <div class="card-content">
       <div class="media">
@@ -130,16 +145,13 @@ function createGoalCard(goal){
         </div>
         <div class="media-content">
           <p class="title is-4">${goal.name}</p>
-          <p class="subtitle is-6">${goal.amount}</p>
+          <p class="subtitle is-6">${goal.amount} by ${goal.target}</p>
         </div>
       </div>
   
       <div class="content">
-        <progress class="progress is-small is-dark" max="100"></progress>
-        <span>${goal.description}</span>
-        <br/>
-        <span>${goal.target}</span>
-        <br/>
+        <progress class="progress is-small is-dark" max=${parseInt(goal.amount.slice(1))} value=${parseInt(goal.funded)}></progress>
+        <p>${goal.description}</p>
         <button id="fundGoal" class="button is-small is-light">Fund</button>
         <button id="deleteGoal" class="button is-small is-dark">Delete</button>
       </div>
