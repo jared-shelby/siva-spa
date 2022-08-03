@@ -6,6 +6,10 @@ class GoalSerializer < ActiveModel::Serializer
     Money.from_amount(object.amount).format
   end
 
+  def funded
+    object.funded >= object.amount ? object.amount : object.funded
+  end
+
   def target
     object.target.strftime("%B %d, %Y")
   end
