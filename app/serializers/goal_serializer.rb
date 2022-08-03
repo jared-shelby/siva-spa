@@ -1,5 +1,5 @@
 class GoalSerializer < ActiveModel::Serializer
-  attributes :id, :name, :amount, :description, :target, :image
+  attributes :id, :name, :amount, :funded, :description, :target, :image
   belongs_to :user
 
   def amount
