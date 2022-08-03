@@ -74,21 +74,44 @@ navbarGoals.addEventListener("click", event => {
                         .then(data => event.target.parentElement.parentElement.parentElement.remove());
                     num -= 1;
                 } else if (event.target.id === "fundGoal") {
-                    // display form to fund goal
-                    // find nearest goal (div), get dataset id, and send patch request
-                    let updatedGoalBody = {
-                    }
-                    let configObj = {
-                        method: "PATCH",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Accept": "application/json"
-                        },
-                        body: JSON.stringify(updatedGoalBody)
-                    }
-                    fetch(`${URL}/goals/${event.target.parentElement.dataset.id}`, configObj)
-                        .then(response => response.json())
-                        .then(console.log);
+                    // display form to fund goal (send goal name as a string & goal dataset id)
+                    charts.innerHTML = fundGoalForm(event.target.parentElement.parentElement.querySelector("#media #media-content #title"), event.target.parentElement.parentElement.parentElement.dataset.id);
+
+                    let form = document.getElementById("form");
+                    let submit = document.getElementById("submit");
+                    let cancel = document.getElementById("cancel");
+
+                    cancel.addEventListener("click", event => form.remove());
+                    submit.addEventListener("click", event => {
+                        let newAmount = document.getElementById("newAmount").value;
+                        
+                        // find nearest goal (div), get dataset id, and send patch request
+                        let updatedGoalBody = {
+                            funded: newAmount
+                        }
+
+                        let configObj = {
+                            method: "PATCH",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Accept": "application/json"
+                            },
+                            body: JSON.stringify(updatedGoalBody)
+                        }
+                        fetch(`${URL}/goals/${event.target.parentElement.parentElement.parentElement.dataset.id}`, configObj)
+                            .then(response => response.json())
+                            .then(data => {
+                                // update progress bar
+                                let progress = document.querySelector(`[data-id="${event.target.parentElement.parentElement.parentElement.dataset.id}"]`).querySelector("progress");
+                                progress.value = data.funded;
+                                if (data["completed?"]) {
+                                    progress.classList.remove("is-dark");
+                                    progress.classList.add("is-success");
+                                }
+                                form.remove();
+                                notify(`Successfully funded ${data.name}! You've contributed ${data.funded_pretty} so far.`);
+                            });
+                    })
                 }
             })
         
@@ -146,7 +169,7 @@ navbarGoals.addEventListener("click", event => {
         })
 })
 
-function createGoalCard(goal){
+function createGoalCard(goal) {
     let newGoalCard = document.createElement("div");
     newGoalCard.classList += "card mb-4";
     newGoalCard.dataset.id = goal.id;
@@ -166,7 +189,7 @@ function createGoalCard(goal){
       </div>
   
       <div class="content">
-        <progress class="progress is-small is-dark" max=${parseFloat(goal.amount)} value=${parseFloat(goal.funded)}></progress>
+        <progress class="progress is-small ${goal["completed?"] ? "is-success" : "is-dark"}" max=${parseFloat(goal.amount)} value=${parseFloat(goal.funded)}></progress>
         <p>${goal.description}</p>
         <button id="fundGoal" class="button is-small is-light">Fund</button>
         <button id="deleteGoal" class="button is-small is-dark">Delete</button>
@@ -225,13 +248,35 @@ function newGoalForm() {
     </div>`
 }
 
+function fundGoalForm(goalName, goalDatasetId) {
+    return `
+    <div id="form" data-id=${goalDatasetId}>
+        <hr/><h3 class="title is-size-4">Fund Goal: ${goalName}</h3>
+        <div class="field">
+            <label class="label">Amount ($)</label>
+            <div class="control">
+                <input id="newAmount" class="input" type="number" placeholder="e.g., 1000">
+            </div>
+        </div>
+        
+        <div class="field is-grouped">
+            <div class="control">
+                <button id="submit" class="button is-dark">Submit</button>
+            </div>
+            <div class="control">
+                <button id="cancel" class="button is-light">Cancel</button>
+            </div>
+        </div>
+    </div>`
+}
+
 // insert notification in right sidebar w/ delete button
 function notify(string) {
     let notification = document.createElement("div");
     notification.classList += "notification";
     notification.innerHTML = 
         `<button id="deleteNotification" class="delete"></button>
-        ${string}`
+        <strong>${string}</strong>`
     charts.appendChild(notification);
     let deleteNotification = document.getElementById("deleteNotification");
     deleteNotification.addEventListener("click", event => notification.remove());

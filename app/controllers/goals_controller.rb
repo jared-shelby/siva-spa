@@ -11,7 +11,8 @@ class GoalsController < ApplicationController
 
     def update
         goal = Goal.find(params[:id])
-        goal.update(goal_params)
+        amount = goal.funded + params[:funded].to_f
+        goal.update(funded: amount)
         render json: goal
     end
 
