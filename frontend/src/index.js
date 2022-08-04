@@ -65,14 +65,19 @@ navbarGoals.addEventListener("click", event => {
                 }
             });
 
+            generateGoalsChart();
+
             // once all goals are listed, listen for click on edit or delete buttons
             goalColumns.addEventListener("click", event => {
                 if (event.target.id === "deleteGoal") {
                     // find nearest goal (div), get dataset id, and send delete request
                     fetch(`${URL}/goals/${event.target.parentElement.parentElement.parentElement.dataset.id}`, { method: "DELETE" })
                         .then(response => response.json())
-                        .then(data => event.target.parentElement.parentElement.parentElement.remove());
-                    num -= 1;
+                        .then(data => {
+                            event.target.parentElement.parentElement.parentElement.remove()
+                            num -= 1;
+                            generateGoalsChart();
+                        });
                 } else if (event.target.id === "fundGoal") {
                     // display form to fund goal (send goal name as a string & goal dataset id)
                     charts.innerHTML = fundGoalForm(event.target.parentElement.parentElement.querySelector("#media #media-content #title"), event.target.parentElement.parentElement.parentElement.dataset.id);
@@ -110,6 +115,7 @@ navbarGoals.addEventListener("click", event => {
                                 }
                                 form.remove();
                                 notify(`Successfully funded ${data.name}! You've contributed ${data.funded_pretty} so far.`);
+                                generateGoalsChart();
                             });
                     })
                 }
@@ -124,7 +130,10 @@ navbarGoals.addEventListener("click", event => {
                 let submit = document.getElementById("submit");
                 let cancel = document.getElementById("cancel");
 
-                cancel.addEventListener("click", event => form.remove());
+                cancel.addEventListener("click", event => {
+                    form.remove();
+                    generateGoalsChart();
+                });
                 submit.addEventListener("click", event => {
                     let newGoalName = document.getElementById("newName").value;
                     let newGoalDescription = document.getElementById("newDescription").value;
@@ -280,6 +289,61 @@ function notify(string) {
     charts.appendChild(notification);
     let deleteNotification = document.getElementById("deleteNotification");
     deleteNotification.addEventListener("click", event => notification.remove());
+}
+
+function generateGoalsChart() {
+    // generate polar area chart for goals
+    charts.innerHTML = "";
+    fetch(`${URL}/users/1`)
+        .then(response => response.json())
+        .then(data => {
+            let newChart = document.createElement("div");
+            newChart.innerHTML = 
+                `<hr/><h3 class="title is-size-4 has-text-centered">All Goals</h3>
+                <canvas id="myChart"></canvas>`;
+            charts.appendChild(newChart);
+            
+            let labels = [];
+            let amounts = [];
+            let backgroundColors = [
+                "rgb(214, 40, 40)",
+                "rgb(247, 127, 0)",
+                "rgb(252, 191, 73)",
+                "rgb(234, 226, 183)",
+                "rgb(0, 48, 73)",
+                "rgb(42, 157, 143)",
+                "rgb(137, 176, 174)"
+            ];
+            let backgroundColor = [];
+
+            let index = 0;
+            data.goals.forEach(goal => {
+                labels.push(goal.name);
+                amounts.push(goal.amount);
+                backgroundColor.push(backgroundColors[index % backgroundColors.length]);
+                index += 1;
+            });
+
+            const chartData = {
+                labels: labels,
+                datasets: [{
+                    label: "All Goals",
+                    data: amounts,
+                    backgroundColor: backgroundColor,
+                    hoverOffset: 4
+                }]
+            };
+        
+            const config = {
+                type: 'polarArea',
+                data: chartData,
+            };
+        
+            const myChart = new Chart(
+                document.getElementById('myChart'),
+                config
+            );
+        })
 }
 
 
