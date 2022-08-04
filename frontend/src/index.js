@@ -25,10 +25,21 @@ navbarHome.addEventListener("click", event => {
     fetch(`${URL}/users/1`)
         .then(response => response.json())
         .then(data => {
-            content.innerHTML = 
-                `<h1 class="title">Home</h1>
+            let featuredGoal = data.goals.find(goal => !goal["completed?"]);
+            content.innerHTML = `
+                <h1 class="title">Home</h1>
                 <h2 id="displayName" class="subtitle">Welcome back, ${data.name.split(" ")[0]}.</h2>
-                <p>${data.total_spent} spent so far.`;
+                <h3>Featured Goal:</h3>
+                <div class="columns">
+                    <div id="featuredGoalColumn" class="column is-5"></div>
+                    <div class="column is-1"></div>
+                    <div id="spendingColumn" class="column is-5"></div>
+                    <div class="column is-1"></div>
+                </div>
+                `;
+            let featuredGoalColumn = document.getElementById("featuredGoalColumn");
+            featuredGoalColumn.appendChild(createGoalCard(featuredGoal));
+            let spendingColumn = document.getElementById("spendingColumn");
         })
 })
 
@@ -80,7 +91,7 @@ navbarGoals.addEventListener("click", event => {
                         });
                 } else if (event.target.id === "fundGoal") {
                     // display form to fund goal (send goal name as a string & goal dataset id)
-                    charts.innerHTML = fundGoalForm(event.target.parentElement.parentElement.querySelector("#media #media-content #title"), event.target.parentElement.parentElement.parentElement.dataset.id);
+                    charts.innerHTML = fundGoalForm(event.target.parentElement.parentElement.parentElement.querySelector("p.title").innerHTML, event.target.parentElement.parentElement.parentElement.dataset.id);
 
                     let form = document.getElementById("form");
                     let submit = document.getElementById("submit");
@@ -214,7 +225,7 @@ function createGoalCard(goal) {
 function newGoalForm() {
     return `
     <div id="form">
-        <hr/><h3 class="title is-size-4">Create New Milestone</h3>
+        <hr/><h3 class="title is-size-4 has-text-centered">Create New Milestone</h3>
         <div class="field">
             <label class="label">Name</label>
             <div class="control">
@@ -264,7 +275,7 @@ function newGoalForm() {
 function fundGoalForm(goalName, goalDatasetId) {
     return `
     <div id="form" data-id=${goalDatasetId}>
-        <hr/><h3 class="title is-size-4">Fund Goal: ${goalName}</h3>
+        <hr/><h3 class="title is-size-4 has-text-centered">Fund Goal: ${goalName}</h3>
         <div class="field">
             <label class="label">Amount ($)</label>
             <div class="control">
