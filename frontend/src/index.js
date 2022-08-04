@@ -330,13 +330,13 @@ navbarSpending.addEventListener("click", event => {
                     let newTransactionAmount = document.getElementById("newAmount").value;
                     let newTransactionDate = document.getElementById("newDate").value;
                     let newTransactionMerchant = document.getElementById("newMerchant").value;
-                    let newTransactionCategory = document.getElementById("newCategory").value;
+                    let newTransactionCategory = document.getElementById("newCategory").selectedIndex + 1;
                     
                     let newTransactionBody = {
                         amount: newTransactionAmount,
                         date: newTransactionDate,
                         merchant: newTransactionMerchant,
-                        category_id: 1,
+                        category_id: newTransactionCategory,
                         user_id: 1
                     };
                     
@@ -388,7 +388,9 @@ function createTransactionItem(transaction) {
 function generateChart() {
     // once all transactions are compiled, generate a pie chart
     let newChart = document.createElement("div");
-    newChart.innerHTML = `<canvas id="myChart"></canvas>`;
+    newChart.innerHTML = 
+        `<hr/><h3 class="title is-size-4 has-text-centered">All Transactions</h3>
+        <canvas id="myChart"></canvas>`;
     charts.appendChild(newChart);
     
     const chartData = {
