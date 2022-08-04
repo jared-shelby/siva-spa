@@ -368,7 +368,11 @@ navbarSpending.addEventListener("click", event => {
             // find nearest transaction (tr), get dataset id, and send delete request
             fetch(`${URL}/transactions/${event.target.parentElement.dataset.id}`, { method: "DELETE" })
                 .then(response => response.json())
-                .then(data => event.target.parentElement.remove());
+                .then(data => {
+                    event.target.parentElement.remove();
+                    notify("Transaction successfully deleted.")
+                    generateChart();
+                });
         }
     })
 })
@@ -387,39 +391,60 @@ function createTransactionItem(transaction) {
 
 function generateChart() {
     // once all transactions are compiled, generate a pie chart
-    let newChart = document.createElement("div");
-    newChart.innerHTML = 
-        `<hr/><h3 class="title is-size-4 has-text-centered">All Transactions</h3>
-        <canvas id="myChart"></canvas>`;
-    charts.appendChild(newChart);
-    
-    const chartData = {
-        labels: [
-            'Red',
-            'Blue',
-            'Yellow'
-        ],
-        datasets: [{
-            label: 'My First Dataset',
-            data: [300, 50, 100],
-            backgroundColor: [
-            'rgb(255, 99, 132)',
-            'rgb(54, 162, 235)',
-            'rgb(255, 205, 86)'
-            ],
-            hoverOffset: 4
-        }]
-    };
+    charts.innerHTML = "";
+    fetch(`${URL}/users/1`)
+        .then(response => response.json())
+        .then(data => {
+            let newChart = document.createElement("div");
+            newChart.innerHTML = 
+                `<hr/><h3 class="title is-size-4 has-text-centered">All Transactions</h3>
+                <canvas id="myChart"></canvas>`;
+            charts.appendChild(newChart);
 
-    const config = {
-        type: 'pie',
-        data: chartData,
-    };
-
-    const myChart = new Chart(
-        document.getElementById('myChart'),
-        config
-    );
+            const chartData = {
+                labels: [
+                    "Food/Drink",
+                    "Entertainment",
+                    "Bills",
+                    "Health/Beauty",
+                    "Transportation",
+                    "Shopping",
+                    "Other"
+                ],
+                datasets: [{
+                    label: "All Transactions",
+                    data: [
+                        data.total_categories["Food/Drink"],
+                        data.total_categories["Entertainment"],
+                        data.total_categories["Bills"],
+                        data.total_categories["Health/Beauty"],
+                        data.total_categories["Transportation"],
+                        data.total_categories["Shopping"],
+                        data.total_categories["Other"],
+                    ],
+                    backgroundColor: [
+                    "rgb(214, 40, 40)",
+                    "rgb(247, 127, 0)",
+                    "rgb(252, 191, 73)",
+                    "rgb(234, 226, 183)",
+                    "rgb(0, 48, 73)",
+                    "rgb(42, 157, 143)",
+                    "rgb(137, 176, 174)"
+                    ],
+                    hoverOffset: 4
+                }]
+            };
+        
+            const config = {
+                type: 'pie',
+                data: chartData,
+            };
+        
+            const myChart = new Chart(
+                document.getElementById('myChart'),
+                config
+            );
+        })
 }
 
 function newTransactionForm() {
