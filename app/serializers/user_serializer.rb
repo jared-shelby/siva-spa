@@ -15,4 +15,8 @@ class UserSerializer < ActiveModel::Serializer
     end
     total_categories
   end
+
+  def transactions
+    object.transactions.order("date DESC")
+  end
 end
