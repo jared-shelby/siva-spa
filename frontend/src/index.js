@@ -86,7 +86,10 @@ navbarGoals.addEventListener("click", event => {
                     let submit = document.getElementById("submit");
                     let cancel = document.getElementById("cancel");
 
-                    cancel.addEventListener("click", event => form.remove());
+                    cancel.addEventListener("click", event => {
+                        form.remove();
+                        generateGoalsChart();
+                    });
                     submit.addEventListener("click", event => {
                         let newAmount = document.getElementById("newAmount").value;
                         
@@ -134,6 +137,7 @@ navbarGoals.addEventListener("click", event => {
                     form.remove();
                     generateGoalsChart();
                 });
+
                 submit.addEventListener("click", event => {
                     let newGoalName = document.getElementById("newName").value;
                     let newGoalDescription = document.getElementById("newDescription").value;
@@ -588,6 +592,8 @@ navbarSettings.addEventListener("click", event => {
                 <li><strong>[Ski Trip:] </strong>[$20,000]</li>
             </ul>`;
 
+            charts.innerHTML = displayInstructions();
+
         let editAccountDetails = document.getElementById("editAccountDetails");
         editAccountDetails.addEventListener("click", event => {
             charts.innerHTML = editAccountDetailsForm(document.getElementById("name").innerHTML, document.getElementById("email").innerHTML);
@@ -595,7 +601,11 @@ navbarSettings.addEventListener("click", event => {
             let form = document.getElementById("form");
             let submit = document.getElementById("submit");
             let cancel = document.getElementById("cancel");
-            cancel.addEventListener("click", event => form.remove());
+            cancel.addEventListener("click", event => {
+                form.remove();
+                charts.innerHTML = displayInstructions();
+            });
+
             submit.addEventListener("click", event => {
                 let newName = `${document.getElementById("newFirstname").value} ${document.getElementById("newLastname").value}`;
                 let newEmail = document.getElementById("newEmail").value;
@@ -620,7 +630,8 @@ navbarSettings.addEventListener("click", event => {
                         document.getElementById("name").innerHTML = `${data.name}`;
                         document.getElementById("email").innerHTML = `${data.email}`;
                         form.remove();
-                        notify("Your account details have been updated successfully.")
+                        notify("Your account details have been updated successfully.");
+                        charts.innerHTML += displayInstructions();
                     });
             })
         })
@@ -661,6 +672,28 @@ function editAccountDetailsForm(currentName, currentEmail) {
             </div>
         </div>
     </div>`
+}
+
+function displayInstructions() {
+    return `
+        <div class="content">
+            <hr/>
+            <h1 class="title is-size-4 has-text-centered">Welcome to SIVA</h1>
+            <p class="has-text-centered">
+                <strong>SIVA</strong> provides a simple interface for managing your finances.
+                This single-page application has a Javascript frontend that makes requests
+                to a Ruby on Rails API backend. For more information, visit
+                <a href="https://github.com/jared-shelby/siva-spa" target="blank">the repo on Github</a>.
+            </p>
+            <p>How to use <strong>SIVA</strong>:
+            <ul>
+                <li><strong>Home: </strong>See an overview of your account & finances.</li>
+                <li><strong>Milestones: </strong>Create & view savings goals & track your progress.</li>
+                <li><strong>Spending: </strong>Save transactions & track your expenses by category.</li>
+                <li><strong>Settings: </strong>Edit account information & see relevant statistics.</li>
+            </ul>
+        </div>
+    `
 }
 
 // start out on home page upon refresh/load
