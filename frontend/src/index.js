@@ -26,14 +26,20 @@ navbarHome.addEventListener("click", event => {
         .then(response => response.json())
         .then(data => {
             let featuredGoal = data.goals.find(goal => !goal["completed?"]);
+            // add in logic for if featuredGoal is undefined / no transactions!
             content.innerHTML = `
                 <h1 class="title">Home</h1>
                 <h2 id="displayName" class="subtitle">Welcome back, ${data.name.split(" ")[0]}.</h2>
-                <h3>Featured Goal:</h3>
                 <div class="columns">
-                    <div id="featuredGoalColumn" class="column is-5"></div>
+                    <div id="featuredGoalColumn" class="column is-5">
+                        <h3>Featured Milestone:</h3>
+                        <p>Your target date is quickly approaching -- keep saving!</p>
+                    </div>
                     <div class="column is-1"></div>
-                    <div id="spendingColumn" class="column is-5"></div>
+                    <div id="spendingColumn" class="column is-5">
+                        <h3>Spending Stats:</h3>
+                        <p>Here's some helpful numbers to keep you on track.</p>
+                    </div>
                     <div class="column is-1"></div>
                 </div>
                 `;
@@ -350,7 +356,7 @@ function generateGoalsChart() {
             };
         
             const config = {
-                type: 'polarArea',
+                type: 'pie',
                 data: chartData,
             };
         
