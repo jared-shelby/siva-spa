@@ -592,7 +592,7 @@ navbarSettings.addEventListener("click", event => {
                 <li><strong>[Ski Trip:] </strong>[$20,000]</li>
             </ul>`;
 
-            charts.innerHTML = displayInstructions();
+            charts.appendChild(displayInstructions());
 
         let editAccountDetails = document.getElementById("editAccountDetails");
         editAccountDetails.addEventListener("click", event => {
@@ -603,7 +603,7 @@ navbarSettings.addEventListener("click", event => {
             let cancel = document.getElementById("cancel");
             cancel.addEventListener("click", event => {
                 form.remove();
-                charts.innerHTML = displayInstructions();
+                charts.appendChild(displayInstructions());
             });
 
             submit.addEventListener("click", event => {
@@ -631,7 +631,7 @@ navbarSettings.addEventListener("click", event => {
                         document.getElementById("email").innerHTML = `${data.email}`;
                         form.remove();
                         notify("Your account details have been updated successfully.");
-                        charts.innerHTML += displayInstructions();
+                        charts.appendChild(displayInstructions());
                     });
             })
         })
@@ -675,25 +675,26 @@ function editAccountDetailsForm(currentName, currentEmail) {
 }
 
 function displayInstructions() {
-    return `
-        <div class="content">
-            <hr/>
-            <h1 class="title is-size-4 has-text-centered">Welcome to SIVA</h1>
-            <p class="has-text-centered">
-                <strong>SIVA</strong> provides a simple interface for managing your finances.
-                This single-page application has a Javascript frontend that makes requests
-                to a Ruby on Rails API backend. For more information, visit
-                <a href="https://github.com/jared-shelby/siva-spa" target="blank">the repo on Github</a>.
-            </p>
-            <p>How to use <strong>SIVA</strong>:
-            <ul>
-                <li><strong>Home: </strong>See an overview of your account & finances.</li>
-                <li><strong>Milestones: </strong>Create & view savings goals & track your progress.</li>
-                <li><strong>Spending: </strong>Save transactions & track your expenses by category.</li>
-                <li><strong>Settings: </strong>Edit account information & see relevant statistics.</li>
-            </ul>
-        </div>
+    let instructions = document.createElement("div");
+    instructions.classList.add("content");
+    instructions.innerHTML = `
+        <hr/>
+        <h1 class="title is-size-4 has-text-centered">Welcome to SIVA</h1>
+        <p class="has-text-centered">
+            <strong>SIVA</strong> provides a simple interface for managing your finances.
+            This single-page application has a Javascript frontend that makes requests
+            to a Ruby on Rails API backend. For more information, visit
+            <a href="https://github.com/jared-shelby/siva-spa" target="blank">the repo on Github</a>.
+        </p>
+        <p>How to use <strong>SIVA</strong>:
+        <ul>
+            <li><strong>Home: </strong>See an overview of your account & finances.</li>
+            <li><strong>Milestones: </strong>Create & view savings goals & track your progress.</li>
+            <li><strong>Spending: </strong>Save transactions & track your expenses by category.</li>
+            <li><strong>Settings: </strong>Edit account information & see relevant statistics.</li>
+        </ul>
     `
+    return instructions;
 }
 
 // start out on home page upon refresh/load
