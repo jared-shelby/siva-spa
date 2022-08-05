@@ -2,18 +2,9 @@
 // => home page displays & events
 
 // --------- HOME PAGE FUNCTIONS ---------
-// display logo for home page
-function displayHomeLogo() {
-    sidebar.innerHTML = `
-        <div class="pl-4">
-            <img src="./assets/home.png">
-        </div>
-    `;
-}
-
 // display universal info for home page
 function setupHome(userName) {
-    content.innerHTML = `
+    main.innerHTML = `
         <h1 class="title">Home</h1>
         <h2 class="subtitle">Welcome back, ${userName.split(" ")[0]}.</h2>
         <div class="columns">
@@ -73,7 +64,7 @@ home.addEventListener("click", event => {
     sanitize();
 
     // add logo to logobar
-    displayHomeLogo();
+    displayLogo("./assets/home.png");
 
     // initiate fetch request; 
     // use pessimistic rendering to load content once api has been successfully queried
