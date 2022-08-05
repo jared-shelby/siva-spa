@@ -55,6 +55,23 @@ function createFeaturedMilestoneCard(featuredMilestone) {
     `
     return featuredMilestoneCard;
 }
+
+// display spending insights
+function displaySpendingInsights(data) {
+    let spendingColumn = document.getElementById("spendingColumn");
+    spendingColumn.innerHTML = `
+        <h3>Spending Insights:</h3>
+        <p>Here are some details to keep you on track.</p>
+        <ul>
+            <li><strong>Most recent transaction:</strong> ${data.transactions[0].amount} purchase on ${data.transactions[0].date} at ${data.transactions[0].merchant}</li>
+            <p><em>This is your most recent transaction. It is fetched by analyzing all your transactions and choosing the one with the closest date to today.</em></p>
+            <li><strong>Total spent:</strong> ${data.total_spent}</li>
+            <p><em>This is the sum of all of your transactions. Keep in mind this covers the entirety of your account history.</em></p>
+            <li><strong>Highest spending category:</strong> ${Object.keys(data.highest_category)[0]} - ${Object.values(data.highest_category)[0]}</li>
+            <p><em>This is the category you spend the most money in. The dollar amount represents how much money you've spent in that category over the lifetime of your account.</em></p>
+        </ul>
+    `;
+}
 // ---------------------------------------
 
 // --------- MAIN FUNCTIONALITY ---------
@@ -84,6 +101,7 @@ home.addEventListener("click", event => {
 
             // display spending insights if user has any transactions
             if (data.transactions.length > 0) {
+                displaySpendingInsights(data);
             }
 
         });

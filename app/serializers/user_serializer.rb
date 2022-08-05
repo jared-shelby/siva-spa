@@ -1,5 +1,5 @@
 class UserSerializer < ActiveModel::Serializer
-  attributes :id, :name, :email, :total_spent, :total_categories
+  attributes :id, :name, :email, :total_spent, :total_categories, :highest_category
   has_many :milestones
   has_many :transactions
 
@@ -14,6 +14,13 @@ class UserSerializer < ActiveModel::Serializer
       total_categories[transaction.category.name] += transaction.amount
     end
     total_categories
+  end
+
+  def highest_category
+    highest_category = {}
+    key = total_categories.key(total_categories.values.max)
+    highest_category[key] = Money.from_amount(total_categories[key]).format
+    highest_category
   end
 
   def milestones
