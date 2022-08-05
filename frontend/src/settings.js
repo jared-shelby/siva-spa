@@ -1,9 +1,6 @@
 // JS#5 :: "settings.js" 
 // => settings page displays & events
 
-// --------- SETTINGS PAGE VARIABLES ---------
-// ---------------------------------------
-
 // --------- SETTINGS PAGE FUNCTIONS ---------
 // display universal info for settings page
 function setupSettings(data) {
@@ -18,8 +15,8 @@ function setupSettings(data) {
         <button id="editAccountDetails" class="button is-light">Edit account details</button>
         <h3>Statistics:</h3>
         <ul>
-            <li><strong>Current milestones: </strong>${data.milestones.length}</li>
-            <li><strong>Most recent transaction: </strong>${data.transactions[0].date}</li>
+            <li><strong>Current milestones: </strong>${data.milestones.length > 0 ? data.milestones.length : "No milestones created"}</li>
+            <li><strong>Most recent transaction: </strong>${data.transactions.length > 0 ? data.transactions[0].date : "No transactions created"}</li>
         </ul>
     `;
 }
