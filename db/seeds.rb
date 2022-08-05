@@ -17,6 +17,6 @@ Transaction.create(amount: 4.56, date: "August 3, 2022", merchant: "Coffee Bean"
 Transaction.create(amount: 15.67, date: "July 13, 2022", merchant: "Theater Delight", user: jared, category: entertainment)
 Transaction.create(amount: 180, date: "August 1, 2022", merchant: "Zap Electric", user: jared, category: bills)
 Transaction.create(amount: 50.60, date: "August 1, 2022", merchant: "Mobile Madness", user: jared, category: bills)
-Transaction.create(amount: 456.78, date: "June 20, 2022", merchant: "SY Hospital", user: jared, category: health_beauty)
-Transaction.create(amount: 20, date: "June 24, 2022", merchant: "ByeBye Train", user: jared, category: transportation)
+Transaction.create(amount: 156.78, date: "June 20, 2022", merchant: "SY Hospital", user: jared, category: health_beauty)
+Transaction.create(amount: 35, date: "June 24, 2022", merchant: "ByeBye Train", user: jared, category: transportation)
 Transaction.create(amount: 100.09, date: "July 18, 2022", merchant: "Skymart", user: jared, category: shopping)
