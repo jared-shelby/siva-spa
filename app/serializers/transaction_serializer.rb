@@ -1,5 +1,5 @@
 class TransactionSerializer < ActiveModel::Serializer
-  attributes :id, :amount, :date, :merchant
+  attributes :id, :amount, :date, :merchant, :category
   belongs_to :user
   belongs_to :category
 

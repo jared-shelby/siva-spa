@@ -5,7 +5,6 @@
 let counter = 0; // alternate milestone display in grid
 // ---------------------------------------
 
-
 // --------- MILESTONES PAGE FUNCTIONS ---------
 // display universal info for milestones page
 function setupMilestones() {
@@ -71,17 +70,16 @@ function createMilestoneCard(milestone) {
 }
 
 function generateMilestonesChart() {
-    sidebar.innerHTML = "";
     fetch(`${URL}/users/${userId}`)
         .then(response => response.json())
         .then(data => {
-            let newMilestonesChart = document.createElement("div");
-            newMilestonesChart.innerHTML = `
-                <hr/>
-                <h3 class="title is-size-4 has-text-centered">All Goals</h3>
-                <canvas id="milestonesChart"></canvas>
+            sidebar.innerHTML = `
+                <div>
+                    <hr/>
+                    <h3 class="title is-size-4 has-text-centered">All Goals</h3>
+                    <canvas id="milestonesChart"></canvas>
+                </div>
             `;
-            sidebar.appendChild(newMilestonesChart);
         
             let labels = []; // all milestone names
             let amounts = []; // all milestone amounts
@@ -355,7 +353,7 @@ milestones.addEventListener("click", event => {
                     deleteMilestone(event.target);
                 }
             })
-            
+
         });
 
 })
