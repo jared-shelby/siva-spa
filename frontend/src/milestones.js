@@ -281,6 +281,8 @@ function displayFundMilestoneForm(eventTarget) {
                 // update progress bar
                 let progress = document.querySelector(`[data-id="${datasetId}"]`).querySelector("progress");
                 progress.value = data.funded;
+                let contributed = document.querySelector(`[data-id="${datasetId}"]`).querySelector("em").querySelector("strong");
+                contributed.innerHTML = data.funded_pretty;
                 if (data["completed?"]) {
                     progress.classList.remove("is-dark");
                     progress.classList.add("is-success");
@@ -319,6 +321,8 @@ milestones.addEventListener("click", event => {
 
     // add logo to logobar
     displayLogo("./assets/milestones.png");
+
+    counter = 0;
 
     // initiate fetch request; 
     // use pessimistic rendering to load content once api has been successfully queried
