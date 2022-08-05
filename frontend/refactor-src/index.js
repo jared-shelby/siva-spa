@@ -23,6 +23,15 @@ function sanitize() {
     sidebar.innerHTML = "";
 }
 
+// display logo for home page
+function displayLogo(src) {
+    sidebar.innerHTML = `
+        <div class="pl-4">
+            <img src=${src}>
+        </div>
+    `;
+}
+
 // display a notification w/ delete button
 function notify(message) {
     let notification = document.createElement("div");
