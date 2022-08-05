@@ -10,6 +10,7 @@ const spending = document.getElementById("spending"); // spending button in navb
 const settings = document.getElementById("settings"); // settings button in navbar
 const logobar = document.getElementById("logobar"); // left sidebar container for logos
 const main = document.getElementById("main"); // middle container for content
+const notification = document.getElementById("notification"); // right container for notifications
 const sidebar = document.getElementById("sidebar"); // right sidebar container for charts and forms
 // ---------------------------------------
 
