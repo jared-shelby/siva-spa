@@ -1,9 +1,9 @@
 jared = User.create(name: "Jared Shelby", email: "jared.shelby@yale.edu")
 
-Milestone.create(name: "Ski Trip", amount: 2000, funded: 0, description: "Can't wait to go to the alps!", target: Time.now, image: "https://media.cntraveler.com/photos/5f84939a5f9755e5951db3f4/master/pass/WhitefishMountainResort-3.jpg", user: jared)
-Milestone.create(name: "New House", amount: 40000, funded: 0, description: "Down payment for our future forever home <3.", target: Time.now, image: "https://foyr.com/learn/wp-content/uploads/2021/08/design-your-dream-home.jpg", user: jared)
-Milestone.create(name: "Summer Funds", amount: 300, funded: 0, description: "Just want a little money for the summer.", target: Time.now, image: "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/beautiful-tropical-sunset-scenery-two-sun-beds-royalty-free-image-1595368231.jpg", user: jared)
-Milestone.create(name: "Flowers", amount: 50, funded: 0, description: "Looking to treat myself :).", target: Time.now, image: "https://www.farmersalmanac.com/wp-content/uploads/2021/04/forget-me-not-flower-as309740666.jpeg", user: jared)
+Milestone.create(name: "Ski Trip", amount: 2000, funded: 0, description: "Can't wait to go to the alps!", target: "August 8, 2022", image: "https://media.cntraveler.com/photos/5f84939a5f9755e5951db3f4/master/pass/WhitefishMountainResort-3.jpg", user: jared)
+Milestone.create(name: "New House", amount: 40000, funded: 0, description: "Down payment for our future forever home <3.", target: "December 18, 2022", image: "https://foyr.com/learn/wp-content/uploads/2021/08/design-your-dream-home.jpg", user: jared)
+Milestone.create(name: "Summer Funds", amount: 300, funded: 0, description: "Just want a little money for the summer.", target: "August 22, 2022", image: "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/beautiful-tropical-sunset-scenery-two-sun-beds-royalty-free-image-1595368231.jpg", user: jared)
+Milestone.create(name: "Flowers", amount: 50, funded: 0, description: "Looking to treat myself :).", target: "September 2, 2022", image: "https://www.farmersalmanac.com/wp-content/uploads/2021/04/forget-me-not-flower-as309740666.jpeg", user: jared)
 
 food_drink = Category.create(name: "Food/Drink")
 entertainment = Category.create(name: "Entertainment")
