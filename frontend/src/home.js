@@ -72,7 +72,7 @@ home.addEventListener("click", event => {
         .then(response => response.json())
         .then(data => {
 
-            // display universal home page info
+            // setup page
             let userName = data.name;
             setupHome(userName);
 

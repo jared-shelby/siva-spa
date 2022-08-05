@@ -1,7 +1,7 @@
 // JS#3 :: "milestones.js" 
-// => home page displays & events
+// => milestones page displays, events, and charts
 
-// --------- MILESTONES PAGE CONSTANTS ---------
+// --------- MILESTONES PAGE VARIABLES ---------
 let counter = 0; // alternate milestone display in grid
 // ---------------------------------------
 
@@ -221,6 +221,7 @@ function displayNewMilestoneForm() {
                     odd.appendChild(createMilestoneCard(data))
                     counter++;
                 }
+                notify(`${data.name} has been created successfully! Happy saving!`);
                 generateMilestonesChart();
             });
     })
@@ -327,7 +328,7 @@ milestones.addEventListener("click", event => {
         .then(response => response.json())
         .then(data => {
 
-            // display universal milestones page info
+            // setup page
             setupMilestones();
 
             // display all milestones on grid
@@ -354,6 +355,7 @@ milestones.addEventListener("click", event => {
                     deleteMilestone(event.target);
                 }
             })
+            
         });
 
 })

@@ -34,13 +34,12 @@ function displayLogo(src) {
 
 // display a notification w/ delete button
 function notify(message) {
-    let notification = document.createElement("div");
-    notification.classList.add("notification");
-    notification.innerHTML = `
-        <button id="deleteNotification" class="delete"></button>
-        <strong>${message}</strong>
-    `
-    notifications.appendChild(notification);
+    notifications.innerHTML = `
+        <div class="notification">
+            <button id="deleteNotification" class="delete"></button>
+            <strong>${message}</strong>
+        </div>
+    `;
     let deleteNotification = document.getElementById("deleteNotification");
     deleteNotification.addEventListener("click", event => notifications.innerHTML = "");
 }
