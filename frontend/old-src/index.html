@@ -6,9 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIVA</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"> <!-- bulma css library -->
+    <script defer src="./src/index.js"></script> <!-- main javascript file -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- chart.js library -->
-    <script defer src="./refactor-src/index.js"></script> <!-- main javascript file -->
-    <script defer src="./refactor-src/home.js"></script> <!-- home javascript file -->
 </head>
 <body>
     <nav class="navbar is-light" role="navigation" aria-label="main navigation">
@@ -17,7 +16,6 @@
             <img src="./assets/spending.png"><strong>SIVA</strong> <!-- website logo -->
           </a>
       
-          <!-- burger menu for mobile - not yet implemented -->
           <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
@@ -31,7 +29,7 @@
               Home
             </a>
 
-            <a id="milestones" class="navbar-item">
+            <a id="goals" class="navbar-item">
                 Milestones
             </a>
       
@@ -71,22 +69,19 @@
         </div>
     </nav>
 
-    <hr/>
+    <hr>
 
     <div class="columns">
         <div class="column is-1">
-          <div id="logobar"></div>
+          <div id="sidebar"></div>
         </div>
-
         <div class="column is-7">
-            <div id="main" class="content"></div>
+            <div id="content" class="content"></div>
+            <div id="options" class="content"></div>
         </div>
-
         <div class="column is-3">
-            <div id="notifications"></div>
-            <div id="sidebar"></div>
+          <div id="charts"></div>
         </div>
-
         <div class="column is-1">
         </div>
     </div>

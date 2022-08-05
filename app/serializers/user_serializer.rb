@@ -1,6 +1,6 @@
 class UserSerializer < ActiveModel::Serializer
   attributes :id, :name, :email, :total_spent, :total_categories
-  has_many :goals
+  has_many :milestones
   has_many :transactions
 
   def total_spent
@@ -16,8 +16,8 @@ class UserSerializer < ActiveModel::Serializer
     total_categories
   end
 
-  def goals
-    object.goals.order("target ASC")
+  def milestones
+    object.milestones.order("target ASC")
   end
 
   def transactions

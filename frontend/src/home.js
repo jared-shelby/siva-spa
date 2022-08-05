@@ -38,7 +38,7 @@ function createFeaturedMilestoneCard(featuredMilestone) {
         <div class="card-content">
             <div class="media">
                 <div class="media-left">
-                    <img src="./assets/milestone.png" width="50px" height="50px">
+                    <img src="./assets/milestones.png" width="50px" height="50px">
                 </div>
                 <div class="media-content">
                     <p class="title is-4">${featuredMilestone.name}</p>
@@ -89,4 +89,6 @@ home.addEventListener("click", event => {
         });
 
 })
+
+home.click();
 // ---------------------------------------
