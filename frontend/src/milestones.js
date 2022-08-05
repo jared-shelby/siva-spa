@@ -2,7 +2,7 @@
 // => home page displays & events
 
 // --------- MILESTONES PAGE CONSTANTS ---------
-const counter = 0; // alternate milestone display in grid
+let counter = 0; // alternate milestone display in grid
 // ---------------------------------------
 
 
@@ -44,7 +44,7 @@ function createMilestoneCard(milestone) {
     newMilestoneCard.dataset.id = milestone.id;
     newMilestoneCard.innerHTML = `
         <div class="card-image">
-            <img src=${goal.image} style="width: 100%; height: 250px">
+            <img src=${milestone.image} style="width: 100%; height: 250px">
         </div>
 
         <div class="card-content">
@@ -52,25 +52,26 @@ function createMilestoneCard(milestone) {
                 <div class="media-left">
                     <img src="./assets/milestones.png" width="50px" height="50px">
                 </div>
+                <div class="media-content">
+                    <p class="title is-4">${milestone.name}</p>
+                    <p class="subtitle is-6">${milestone.amount_pretty} by ${milestone.target}</p>
+                </div>
             </div>
-            <div class="media-content">
-                <p class="title is-4">${milestone.name}</p>
-                <p class="subtitle is-6">${milestone.amount_pretty} by ${milestone.target}</p>
-            </div>
-        </div>
     
-        <div class="content">
-            <progress class="progress is-small ${milestone["completed?"] ? "is-success" : "is-dark"}" max=${parseFloat(milestone.amount)} value=${parseFloat(milestone.funded)}></progress>
-            <p><em><strong>${milestone.funded_pretty}</strong> contributed so far.</em></p>
-            <p>${milestone.description}</p>
-            <button id="fundMilestone" class="button is-small is-light">Fund</button>
-            <button id="deleteMilestone" class="button is-small is-dark">Delete</button>
+            <div class="content">
+                <progress class="progress is-small ${milestone["completed?"] ? "is-success" : "is-dark"}" max=${parseFloat(milestone.amount)} value=${parseFloat(milestone.funded)}></progress>
+                <p><em><strong>${milestone.funded_pretty}</strong> contributed so far.</em></p>
+                <p>${milestone.description}</p>
+                <button id="fundMilestone" class="button is-small is-light">Fund</button>
+                <button id="deleteMilestone" class="button is-small is-dark">Delete</button>
+            </div>
         </div>
     `;
     return newMilestoneCard;   
 }
 
 function generateMilestonesChart() {
+    sidebar.innerHTML = "";
     fetch(`${URL}/users/${userId}`)
         .then(response => response.json())
         .then(data => {
@@ -179,7 +180,6 @@ function displayNewMilestoneForm() {
 
     // if cancel button is clicked, clear form & display milestones chart
     cancel.addEventListener("click", event => {
-        sidebar.innerHTML = "";
         generateMilestonesChart();
     })
 
@@ -218,15 +218,15 @@ function displayNewMilestoneForm() {
                     even.appendChild(createMilestoneCard(data));
                     counter++;
                 } else {
-                    oddColumn.appendChild(createMilestoneCard(data))
+                    odd.appendChild(createMilestoneCard(data))
                     counter++;
                 }
-                sidebar.innerHTML = "";
                 generateMilestonesChart();
             });
     })
 }
 
+// display fund milestone form & handle patch request
 function displayFundMilestoneForm(eventTarget) {
     sidebar.innerHTML = `
         <div id="form">
@@ -254,7 +254,6 @@ function displayFundMilestoneForm(eventTarget) {
     let cancel = document.getElementById("cancel"); // cancel fund milestone button
 
     cancel.addEventListener("click", event => {
-        sidebar.innerHTML = "";
         generateMilestonesChart();
     });
 
@@ -277,7 +276,7 @@ function displayFundMilestoneForm(eventTarget) {
         let datasetId = eventTarget.parentElement.parentElement.parentElement.dataset.id;
 
         // initiate patch request
-        fetch(`${URL}/goals/${datasetId}`, config)
+        fetch(`${URL}/milestones/${datasetId}`, config)
             .then(response => response.json())
             .then(data => {
                 // update progress bar
@@ -287,11 +286,29 @@ function displayFundMilestoneForm(eventTarget) {
                     progress.classList.remove("is-dark");
                     progress.classList.add("is-success");
                 }
-                sidebar.innerHTML = ""
                 notify(`Successfully funded ${data.name}! You've contributed ${data.funded_pretty} so far.`);
                 generateMilestonesChart();
             });
     })
+}
+
+// delete milestone
+function deleteMilestone(eventTarget) {
+    let datasetId = eventTarget.parentElement.parentElement.parentElement.dataset.id;
+
+    let config = {
+        method: "DELETE"
+    };
+
+    fetch(`${URL}/milestones/${datasetId}`, config)
+        .then(response => response.json())
+        .then(data => {
+            // remove card
+            eventTarget.parentElement.parentElement.parentElement.remove();
+            counter--;
+            notify(`${data.name} has been deleted successfully.`);
+            generateMilestonesChart();
+        });
 }
 // ---------------------------------------
 
@@ -320,8 +337,10 @@ milestones.addEventListener("click", event => {
             let odd = document.getElementById("odd"); // right side columns
             displayMilestonesInGrid(milestones);
 
-            // display chart with milestone info
-            generateMilestonesChart();
+            // display chart with milestone info unless user has no milestones
+            if (data.milestones.length > 0) {
+                generateMilestonesChart();
+            }
 
             // listen for adding new milestone & handle post request
             let addNewMilestone = document.getElementById("addNewMilestone");

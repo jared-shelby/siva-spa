@@ -1,4 +1,4 @@
-class GoalSerializer < ActiveModel::Serializer
+class MilestoneSerializer < ActiveModel::Serializer
   attributes :id, :name, :amount, :amount_pretty, :funded, :funded_pretty, :description, :target, :image, :completed?
   belongs_to :user
 
