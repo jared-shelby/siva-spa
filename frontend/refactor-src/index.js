@@ -10,7 +10,7 @@ const spending = document.getElementById("spending"); // spending button in navb
 const settings = document.getElementById("settings"); // settings button in navbar
 const logobar = document.getElementById("logobar"); // left sidebar container for logos
 const main = document.getElementById("main"); // middle container for content
-const notification = document.getElementById("notification"); // right container for notifications
+const notifications = document.getElementById("notifications"); // right container for notifications
 const sidebar = document.getElementById("sidebar"); // right sidebar container for charts and forms
 // ---------------------------------------
 
@@ -19,6 +19,20 @@ const sidebar = document.getElementById("sidebar"); // right sidebar container f
 function sanitize() {
     logobar.innerHTML = "";
     main.innerHTML = "";
+    notifications.innerHTML = "";
     sidebar.innerHTML = "";
+}
+
+// display a notification w/ delete button
+function notify(message) {
+    let notification = document.createElement("div");
+    notification.classList.add("notification");
+    notification.innerHTML = `
+        <button id="deleteNotification" class="delete"></button>
+        <strong>${message}</strong>
+    `
+    notifications.appendChild(notification);
+    let deleteNotification = document.getElementById("deleteNotification");
+    deleteNotification.addEventListener("click", event => notifications.innerHTML = "");
 }
 // ---------------------------------------
